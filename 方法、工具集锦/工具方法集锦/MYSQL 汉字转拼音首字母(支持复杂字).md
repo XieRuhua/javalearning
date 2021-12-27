@@ -1,0 +1,47 @@
+需求：获取指定汉字的首字母。如：麒麟--->QL
+```sql
+CREATE DEFINER=`root`@`%` FUNCTION `getPY`(in_string VARCHAR(100)) RETURNS varchar(100) CHARSET utf8
+BEGIN	
+DECLARE tmp_str VARCHAR(100) CHARSET gbk DEFAULT '' ;
+DECLARE tmp_char VARCHAR(100) CHARSET gbk DEFAULT '' ; 
+DECLARE V_LEN INT;
+DECLARE V_I INT;
+DECLARE V_PY VARCHAR(100);
+SET V_LEN=CHAR_LENGTH(in_string);
+SET V_I=1;
+SET V_PY='';
+DROP TEMPORARY TABLE IF EXISTS TT_PYZD;
+CREATE TEMPORARY TABLE TT_PYZD (chr char(2) ,letter char(2)) DEFAULT CHARSET gbk;
+INSERT INTO TT_PYZD
+SELECT '吖 ', 'A ' UNION ALL SELECT '八 ', 'B ' UNION ALL 
+SELECT '嚓 ', 'C ' UNION ALL SELECT '咑 ', 'D ' UNION ALL 
+SELECT '妸 ', 'E ' UNION ALL SELECT '发 ', 'F ' UNION ALL 
+SELECT '旮 ', 'G ' UNION ALL SELECT '铪 ', 'H ' UNION ALL 
+SELECT '丌 ', 'J ' UNION ALL SELECT '咔 ', 'K ' UNION ALL 
+SELECT '垃 ', 'L ' UNION ALL SELECT '嘸 ', 'M ' UNION ALL 
+SELECT '拏 ', 'N ' UNION ALL SELECT '噢 ', 'O ' UNION ALL 
+SELECT '妑 ', 'P ' UNION ALL SELECT '七 ', 'Q ' UNION ALL 
+SELECT '呥 ', 'R ' UNION ALL SELECT '仨 ', 'S ' UNION ALL 
+SELECT '他 ', 'T ' UNION ALL SELECT '屲 ', 'W ' UNION ALL 
+SELECT '夕 ', 'X ' UNION ALL SELECT '丫 ', 'Y ' UNION ALL 
+SELECT '帀 ', 'Z ' ;
+WHILE V_I<=V_LEN DO 
+SET tmp_str = substring(in_string,V_I,1);
+IF ASCII(tmp_str)<127 
+THEN
+SET tmp_char=UPPER(tmp_str);
+ELSE
+SELECT letter INTO tmp_char FROM TT_PYZD WHERE chr<=tmp_str ORDER BY chr DESC LIMIT 1;
+END IF ;
+SET V_I=V_I+1;
+SET V_PY=CONCAT(V_PY,tmp_char);
+END WHILE;
+DROP TEMPORARY TABLE IF EXISTS TT_PYZD;
+RETURN V_PY;
+END;
+```
+使用方法：
+```sql
+select getPY('麒麟');
+-- 返回结果：QL
+```

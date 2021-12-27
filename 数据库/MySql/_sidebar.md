@@ -1,0 +1,10 @@
+
+#### [FIND_IN_SET、IN、LIKE、LOCATE的区别](./数据库\MySql/FIND_IN_SET、IN、LIKE、LOCATE的区别.md)
+#### [Mariadb5.5.68升级10.5](./数据库\MySql/Mariadb5.5.68升级10.5.md)
+#### [MyISAM与InnoDB 的区别与联系](./数据库\MySql/MyISAM与InnoDB 的区别与联系.md)
+#### [MySQL 的全局锁、表锁和行锁](./数据库\MySql/MySQL 的全局锁、表锁和行锁.md)
+#### [MySql删除大量数据的优化方案（InnoDB）](./数据库\MySql/MySql删除大量数据的优化方案（InnoDB）.md)
+#### [MySql各种批量插入方案性能对比](./数据库\MySql/MySql各种批量插入方案性能对比.md)
+#### [MySql开启定时任务](./数据库\MySql/MySql开启定时任务.md)
+#### [MySql索引](./数据库\MySql/MySql索引.md)
+#### [select count(1) ,count(※),count(字段)](./数据库\MySql/select count(1) ,count(※),count(字段).md)
