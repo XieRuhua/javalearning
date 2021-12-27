@@ -4,6 +4,7 @@ import os
 
 # 需要忽略的配置文件
 omitFiles = [
+    ".git",  # git文件夹
     "base.py",  # 生成目录的python脚本
     "_dirs.md", "README.md", "README.md.bak",  # 目录文件及备份文件
     ".nojekyll", "index.html", "_sidebar.md", "my404.md"  # docsify相关配置文件
@@ -32,6 +33,8 @@ def create_dir_list(file_dir):
         for omitFile in omitFiles:
             if omitFile in files:
                 files.remove(omitFile)
+            if omitFile in dirs:
+                dirs.remove(omitFile)
 
         # 组装需要循环的内容
         for dirStr in dirs + files:
