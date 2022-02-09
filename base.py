@@ -8,7 +8,8 @@ omitFiles = [
     "base.py",  # 生成目录的python脚本
     "_dirs.md", "README.md", "README.md.bak",  # 目录文件及备份文件
     ".nojekyll", "index.html", "_sidebar.md", "my404.md",  # docsify相关配置文件
-    "startDocsify.bat"  # windows上的docsify启动预览脚本
+    "startDocsify.bat",  # windows上的docsify启动预览脚本
+    "createDirectory.bat"  # windows上的python创建目录的脚本
 ]
 
 
