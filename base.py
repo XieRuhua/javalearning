@@ -10,8 +10,6 @@ omitFiles = [
     ".nojekyll", "index.html", "_sidebar.md", "my404.md",  # docsify相关配置文件
     "startDocsify.bat",  # windows上的docsify启动预览脚本
     "createDirectory.bat",  # windows上的python创建目录的脚本
-
-    "安装包"  # 安装包目录
 ]
 
 def create_dir_list(file_dir):
