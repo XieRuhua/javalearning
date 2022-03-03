@@ -2,16 +2,17 @@
 
 import os
 
-# 需要忽略的配置文件
+# 需要忽略的配置文件/目录
 omitFiles = [
     ".git",  # git文件夹
     "base.py",  # 生成目录的python脚本
     "_dirs.md", "README.md", "README.md.bak",  # 目录文件及备份文件
     ".nojekyll", "index.html", "_sidebar.md", "my404.md",  # docsify相关配置文件
     "startDocsify.bat",  # windows上的docsify启动预览脚本
-    "createDirectory.bat"  # windows上的python创建目录的脚本
-]
+    "createDirectory.bat",  # windows上的python创建目录的脚本
 
+    "安装包"  # 安装包目录
+]
 
 def create_dir_list(file_dir):
     # 笔记总数计数
@@ -34,7 +35,7 @@ def create_dir_list(file_dir):
             f = open(r"./README.md.bak", 'r', encoding='UTF-8')
             dirsArr.append(f.read())
 
-        # 忽略执行的文件
+        # 忽略执行的文件和文件夹
         for omitFile in omitFiles:
             if omitFile in files:
                 files.remove(omitFile)
