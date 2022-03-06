@@ -14,7 +14,7 @@
 
 
 
-> 目前笔记总篇数：61
+> 目前笔记总篇数：62 / <font size='2px' color='#ccc'>184-1840</font>
 #### [Java相关](./Java相关/_dirs.md)
 #### [Linux相关](./Linux相关/_dirs.md)
 #### [业务场景](./业务场景/_dirs.md)

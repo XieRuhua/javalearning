@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+import time
+import math
 
 # 需要忽略的配置文件/目录
 omitFiles = [
@@ -12,7 +14,13 @@ omitFiles = [
     "createDirectory.bat",  # windows上的python创建目录的脚本
 ]
 
+
 def create_dir_list(file_dir):
+    # 计算工作到现在一共有多少个10天（计划10天写一篇笔记）
+    day1 = time.strptime("2017-02-20", '%Y-%m-%d')
+    day_num = (time.time() - int(time.mktime(day1))) / (24 * 60 * 60)
+    totalPlannotes = math.floor(day_num / 10)
+
     # 笔记总数计数
     count = 0
     # 根目录的拎出来单独生成
@@ -49,7 +57,8 @@ def create_dir_list(file_dir):
                 count += 1
             elif ".png" in dirStr:
                 # 脑图加载并居中
-                dirsArr.append("<center> \n\n#### " + dirStr.strip(".png") + " 脑图\n![" + dirStr.strip(".png") + "](./" + dirStr + ")\n</center>")
+                dirsArr.append("<center> \n\n#### " + dirStr.strip(".png") + " 脑图\n![" + dirStr.strip(
+                    ".png") + "](./" + dirStr + ")\n</center>")
             elif ".xmind" in dirStr:
                 # 不加入xmind文件
                 continue
@@ -69,11 +78,13 @@ def create_dir_list(file_dir):
                 file_create(root, "./_dirs.md", dirsArr)
 
     # 根目录生成目录
-    # 头部描述和内容目录之间加上笔记总数的描述
-    rootDirsArr[0] = rootDirsArr[0] + "\n> 目前笔记总篇数：" + str(count)
+    # 头部描述和内容目录之间加上笔记总数/应该完成的笔记总数（工作天数/10）以及自2017-02-20以来的工作天数
+    rootDirsArr[0] = rootDirsArr[0] + "\n> 目前笔记总篇数：" + str(count) + " / <font size='2px' color='#ccc'>" + str(
+        totalPlannotes) + "-" + str(math.floor(day_num)) + "</font>"
     # 根目录末尾加上文档工具来源
     rootDirsArr.append("#\n#\n>文档工具docsify：[官方文档-中文](https://docsify.js.org/#/zh-cn/)")
     file_create("./", "/README.md", rootDirsArr)
+
 
 '''
 在指定目录下创建文件并写入内容
@@ -82,6 +93,8 @@ path:路径
 name:文件名
 msgs:内容，数组形式（两个元素之间在方法中已换行）
 '''
+
+
 def file_create(path, name, msgs):
     full_path = path + name
 
@@ -95,6 +108,7 @@ def file_create(path, name, msgs):
         file.write("\n")  # 换行
         file.write(msg)  # 内容写入
     file.close()
+
 
 if __name__ == "__main__":
     create_dir_list("./")

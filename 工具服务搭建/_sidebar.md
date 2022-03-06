@@ -1,4 +1,5 @@
 
+#### [Centos7安装Nginx](./工具服务搭建/Centos7安装Nginx.md)
 #### [Centos7安装python3.+](./工具服务搭建/Centos7安装python3.+.md)
 #### [Centos7安装RabbitMQ](./工具服务搭建/Centos7安装RabbitMQ.md)
 #### [Mariadb5.5.68升级10.5](./工具服务搭建/Mariadb5.5.68升级10.5.md)
