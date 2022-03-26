@@ -58,7 +58,7 @@
 ![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/创建图床仓库.png)
 </center>
 
-**注意：再创建完成之后，仓库一定要选择开源，否则生成的图片外链别人会没有访问权限。**
+**注意：创建完成之后，仓库一定要选择开源，否则生成的图片外链别人会没有访问权限。**
 
 #### 1.2 PicGo安装
 [PicGo GitHub下载地址](https://github.com/Molunerfinn/PicGo)
