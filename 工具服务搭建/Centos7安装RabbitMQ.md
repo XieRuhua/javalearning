@@ -10,15 +10,15 @@
 
 |          | 文件名及版本号                           | 下载地址                                                     | 笔记安装包下载地址 |
 | -------- | --------------------------------------- | ------------------------------------------------------------ | ------------------ |
-| Erlang   | esl-erlang_23.3.1-1_centos_7_amd64.rpm  | https://packages.erlang-solutions.com/erlang/rpm/centos/8/x86_64/esl-erlang_23.3.1-1~centos~8_amd64.rpm | [gitee仓库：esl-erlang_23.3.1-1_centos_7_amd64.rpm](https://gitee.com/xieruhua/images/raw/master/安装包/mq/rabbitmq/esl-erlang_23.3.1-1_centos_7_amd64.rpm)                   |
-| RabbitMQ | rabbitmq-server-3.9.13-1.el8.noarch.rpm | https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.13/rabbitmq-server-3.9.13-1.el8.noarch.rpm | [gitee仓库：rabbitmq-server-3.9.13-1.el8.noarch.rpm](https://gitee.com/xieruhua/images/raw/master/安装包/mq/rabbitmq/rabbitmq-server-3.9.13-1.el8.noarch.rpm)                   |
+| Erlang   | esl-erlang_23.3.1-1_centos_7_amd64.rpm  | https://packages.erlang-solutions.com/erlang/rpm/centos/8/x86_64/esl-erlang_23.3.1-1~centos~8_amd64.rpm | [gitee仓库：esl-erlang_23.3.1-1_centos_7_amd64.rpm](https://raw.githubusercontent.com/XieRuhua/images/master/安装包/mq/rabbitmq/esl-erlang_23.3.1-1_centos_7_amd64.rpm)                   |
+| RabbitMQ | rabbitmq-server-3.9.13-1.el8.noarch.rpm | https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.13/rabbitmq-server-3.9.13-1.el8.noarch.rpm | [gitee仓库：rabbitmq-server-3.9.13-1.el8.noarch.rpm](https://raw.githubusercontent.com/XieRuhua/images/master/安装包/mq/rabbitmq/rabbitmq-server-3.9.13-1.el8.noarch.rpm)                   |
 
 **<font color="red">注意：RabbitMQ和Erlang的版本一定要对应，否则会出现安装失败的情况</font>**
 
 Erlang和Rabbit版本对比官网说明：[RabbitMQ Erlang Version Requirements — RabbitMQ](https://www.rabbitmq.com/which-erlang.html)
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/Erlang和Rabbit版本对比.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/Erlang和Rabbit版本对比.png)
 </center>
 
 ### 2. 安装Erlang
@@ -66,7 +66,7 @@ cp /usr/share/doc/rabbitmq-server-3.9.13/rabbitmq.config.example /usr/lib/rabbit
 去掉对应的地方的注释和后面的逗号，修改后的配置文件如下：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq配置文件.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq配置文件.png)
 </center>
 
 ### 5. 启动RabbitMQ Web管理控制台
@@ -112,13 +112,13 @@ systemctl status rabbitmq-server
 查看运行状态：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq运行状态.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq运行状态.png)
 </center>
 
 **访问：** http://IP:15672  输入设置好的账号密码。
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq主界面.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq主界面.png)
 </center>
 
 **安装成功。**
@@ -150,12 +150,12 @@ RabbitMQ的有些插件没有集成在初始的安装中，它们需要额外安
 | Generic Unix  | `rabbitmq_server-version/plugins` (安装rabbitmq的目录)                             |
 
 将插件文件（`.ez`文件）拷贝到插件目录后可以通过命令`sudo rabbitmq-plugins enable plugin-name`启用插件。  
-如安装 **死信队列** 的插件（[笔记安装包下载地址：rabbitmq_delayed_message_exchange-3.9.0.ez](https://gitee.com/xieruhua/images/raw/master/安装包/mq/rabbitmq/rabbitmq_delayed_message_exchange-3.9.0.ez)），将插件拷贝到指定目录之后执行`sudo rabbitmq-plugins enable rabbitmq_delayed_message_exchange`即可启用
+如安装 **死信队列** 的插件（[笔记安装包下载地址：rabbitmq_delayed_message_exchange-3.9.0.ez](https://raw.githubusercontent.com/XieRuhua/images/master/安装包/mq/rabbitmq/rabbitmq_delayed_message_exchange-3.9.0.ez)），将插件拷贝到指定目录之后执行`sudo rabbitmq-plugins enable rabbitmq_delayed_message_exchange`即可启用
 
 插件安装完成后可以通过命令`sudo rabbitmq-plugins list`查看已有插件列表：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq插件目录.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq插件目录.png)
 </center>
 
 至此插件安装完成。
@@ -166,7 +166,7 @@ RabbitMQ的有些插件没有集成在初始的安装中，它们需要额外安
 web页面提示  **<font color="red">undefined: There is no template at js/tmpl/layout.ejs undefined</font>**
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq异常1.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq异常1.png)
 </center>
 
 处理方式：

@@ -181,7 +181,7 @@ public class TestThread extends Thread {
 用一个图来描述如下：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80%E7%AD%89/%E5%B9%B6%E5%8F%91/%E9%94%81%EF%BC%88Java%EF%BC%89/%E7%BA%BF%E7%A8%8B%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80%E7%AD%89/%E5%B9%B6%E5%8F%91/%E9%94%81%EF%BC%88Java%EF%BC%89/%E7%BA%BF%E7%A8%8B%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
 </center>
 
 1. **新建状态：**  
@@ -1728,7 +1728,7 @@ public interface RunnableFuture<V> extends Runnable, Future<V> {
 `FutureTask`的继承关系和方法如图所示：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java相关/Java基础等/并发/线程、线程池与多线程（Java）/FutureTask的继承关系.jpg)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/线程、线程池与多线程（Java）/FutureTask的继承关系.jpg)
 </center>
 
 可以把`FutureTask`交给`Executor`执行；也可以通`ExecutorService.submit(…)`方法返回一个`FutureTask`，然后执行`FutureTask.get()`方法或`FutureTask.cancel(…)`方法。除此以外，还可以单独使用`FutureTask`。

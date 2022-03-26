@@ -20,7 +20,7 @@
 其中 **验证、准备和解析三个部分统称为连接（Linking）**，这七个阶段的发生顺序如下图所示：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/类加载的七个阶段.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/类加载的七个阶段.png)
 </center>
 
 其中`加载`、`验证`、`准备`、`初始化`和`卸载`这五个阶段的顺序是确定的，类的加载过程必须按照这个顺序来按部就班地进行；  
@@ -453,7 +453,7 @@ static int i = 1;
 
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/类型加载器分类.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/类型加载器分类.png)
 </center>
 
 ### 2. 双亲委派模型描述
@@ -571,7 +571,7 @@ protected Class<?> loadClass(String name, boolean resolve)
 ##### 2.2.1 Tomcat自定义的类加载器
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/Tomcat自定义的类加载器.png)  
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/Tomcat自定义的类加载器.png)  
 `Tomcat加载器架构图`
 </center>
 
@@ -647,7 +647,7 @@ public final class ServiceLoader<S>
 而我们在引入的jar包里也确实能找到这个东西：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/mysql-spi文件地址.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/mysql-spi文件地址.png)
 </center>
 
 点开这个文件可以看到实现的类和类的路径：
@@ -694,7 +694,7 @@ public class Driver extends NonRegisteringDriver implements java.sql.Driver {
 我们都知道，Java的类加载器结构是这样的：
 <center>
 
-![](https://gitee.com/xieruhua/images/raw/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/类型加载器分类.png)
+![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/Java类加载的过程（类的生命周期）和双亲委派模型/类型加载器分类.png)
 </center>
 
 `启动类加载器`作为应用程序类加载器的上级，`启动类加载器`加载的类 对`应用程序类加载器`是可见的。然而`应用程序类加载器`加载的类对`启动类加载器`却是不可见的，以此类推。
