@@ -495,7 +495,7 @@ public class ThreadLocal<T> {
 下图描述了`ThreadLocal`和`Thread`以及`ThreadLocalMap`三者的关系：  
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocal和Thread以及ThreadLocalMap三者的关系.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocal和Thread以及ThreadLocalMap三者的关系.png)
 </center>
 
 代码解释，如：
@@ -544,7 +544,7 @@ public class WeakReferenceTest {
 **效果图如下：**  
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/弱引用清空监控.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/弱引用清空监控.png)
 </center>
 
 #### 3.3 ThreadLocal提供的解决方案
@@ -625,7 +625,7 @@ public class Thread implements Runnable {
 数据结构如下图：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/静态内部类Entry结构图.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/静态内部类Entry结构图.png)
 </center>
 
 `ThreadLocalMap`有点类似`HashMap`的结构，只是`HashMap`是由 **数组+链表（+红黑树）** 实现的，而`ThreadLocalMap`中并没有 **链表（+红黑树）** 结构。
@@ -796,7 +796,7 @@ public class ThreadLocalTest {
 
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的hash冲突处理演示.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的hash冲突处理演示.png)
 </center>
 
 如上图所示，如果插入一个`value=27`的数据，通过`hash`计算后应该落入第4个槽位中，而槽位4已经有了`Entry`数据。  
@@ -810,21 +810,21 @@ public class ThreadLocalTest {
 ##### 第一种情况：`hash`计算后的槽位对应的`Entry`数据为空：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况1：hash计算后的槽位对应的Entry数据为空.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况1：hash计算后的槽位对应的Entry数据为空.png)
 </center>
 这里直接将数据放到该槽位即可。
 
 ##### 第二种情况：槽位数据不为空，`key`值与当前`ThreadLocal`通过`hash`计算获取的`key`一致（同一个线程）：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况2：槽位数据不为空，key值与当前ThreadLocal通过hash计算获取的key一致（同一个线程）.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况2：槽位数据不为空，key值与当前ThreadLocal通过hash计算获取的key一致（同一个线程）.png)
 </center>
 
 这里直接更新该槽位的数据。
 ##### 第三种情况：槽位数据不为空，往后遍历过程中，在找到`Entry`为`null`的槽位之前，未遇到`key`过期的`Entry`：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况3：槽位数据不为空，往后遍历过程中，在找到Entry为null的槽位之前，未遇到key过期的Entry.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况3：槽位数据不为空，往后遍历过程中，在找到Entry为null的槽位之前，未遇到key过期的Entry.png)
 </center>
 
 遍历散列数组，线性往后查找，如果找到`Entry`为`null`的槽位，则将数据放入该槽位中，或者往后遍历过程中，遇到了**key值相等（同一线程)**的数据，直接更新即可。
@@ -834,7 +834,7 @@ public class ThreadLocalTest {
 如下图，往后遍历过程中，到了`index=7`的槽位数据`Entry`的`key=null`：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：槽位数据不为空，往后遍历过程中，在找到Entry为null的槽位之前，未遇到key过期的Entry.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：槽位数据不为空，往后遍历过程中，在找到Entry为null的槽位之前，未遇到key过期的Entry.png)
 </center>
 
 **第一步：** 初始化探测式清理过期数据扫描的开始位置：`slotToExpunge = staleSlot = 7`
@@ -846,7 +846,7 @@ public class ThreadLocalTest {
 如下图所示，**slotToExpunge最终被更新为0**：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第二步.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第二步.png)
 </center>
 
 上面向前迭代的操作是为了更新探测清理过期数据的起始下标`slotToExpunge`的值，这个值在后面会讲解，它是用来判断当前过期槽位`staleSlot`之前是否还有过期元素。
@@ -854,19 +854,19 @@ public class ThreadLocalTest {
 **第三步（情况1）：** 接着开始以`staleSlot`位置(`index=7`)向后迭代，如果找到了相同`key`值的`Entry`数据，更新`Entry`的值并交换`staleSlot`元素的位置(**staleSlot位置为过期元素**)，更新`Entry`数据，如下图：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第三步1.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第三步1.png)
 </center>
 
 **第四步（情况1）：** 然后开始进行过期`Entry`的清理工作，如下图所示：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第四步1.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第四步1.png)
 </center>
 
 **第三步（情况2）：向后遍历过程中，如果没有找到相同key值的Entry数据：**
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第三步2.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第三步2.png)
 </center>
 
 从当前节点`staleSlot`向后查找`key`值相等的`Entry`元素，直到`Entry`为`null`则停止寻找。通过上图可知，此时`table`中没有`key`值相同的`Entry`。
@@ -874,7 +874,7 @@ public class ThreadLocalTest {
 **第四步（情况2）：** 创建新的`Entry`，替换`table[stableSlot]`位置：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第四步2.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第四步2.png)
 </center>
 
 替换完成后也是进行过期元素清理工作，清理工作主要是有两个方法：`expungeStaleEntry()`和`cleanSomeSlots()`，具体细节后面会讲到，请继续往后看。
@@ -924,7 +924,7 @@ int i = key.threadLocalHashCode & (len-1);
 接着就是执行`for`循环遍历，向后查找，先看下`nextIndex()`、`prevIndex()`方法实现：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的nextIndex()和prevIndex()方法实现.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的nextIndex()和prevIndex()方法实现.png)
 </center>
 
 ```java
@@ -1057,14 +1057,14 @@ private void replaceStaleEntry(ThreadLocal<?> key, Object value,
 操作逻辑如下：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的探测式清理expungeStaleEntry()2.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的探测式清理expungeStaleEntry()2.png)
 </center>
 
 如上图，`set(27)` 经过hash计算后应该落到`index=4`的桶中，由于`index=4`桶已经有了数据，所以往后迭代最终数据放入到`index=7`的桶中，放入后一段时间后`index=5`中的`Entry`数据`key`变为了`null`；
 
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的探测式清理expungeStaleEntry()1.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的探测式清理expungeStaleEntry()1.png)
 </center>
 
 如果再有其他数据`set`到`map`中，就会触发**探测式清理**操作。
@@ -1165,13 +1165,13 @@ private boolean cleanSomeSlots(int i, int n) {
 
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的getEntry()方法情况1.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的getEntry()方法情况1.png)
 </center>
 
 **第二种情况：** `slot`位置中的`Entry.key`和要查找的`key`不一致：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的getEntry()方法情况2.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的getEntry()方法情况2.png)
 </center>
 
 以`get(ThreadLocal1)`为例，通过`hash`计算后，正确的`slot`位置应该是4，而`index=4`的槽位已经有了数据，且`key`值不等于`ThreadLocal1`，所以需要继续往后迭代查找。
@@ -1180,7 +1180,7 @@ private boolean cleanSomeSlots(int i, int n) {
 
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的getEntry()方法情况2-1.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的getEntry()方法情况2-1.png)
 </center>
 
 **源码分析：**
@@ -1263,13 +1263,13 @@ private void expungeStaleEntries() {
 **上面进行`rehash()`的阈值是`size >= threshold`，所以当面试官套路`ThreadLocalMap`扩容机制的时候，一定要说清楚下图这两个步骤：**
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap扩容.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap扩容.png)
 </center>
 
 接着看看具体的`resize()`方法，为了方便演示，以`oldTab.len=8`来举例：
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap扩容示例.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap扩容示例.png)
 </center>
 
 **扩容** 后的`tab`的大小为`oldLen * 2`，然后遍历老的散列表，重新计算`hash`位置，然后放到新的`tab`数组中，如果出现`hash`冲突则往后寻找最近的`entry`为`null`的槽位，遍历完成之后，`oldTab`中所有的`entry`数据都已经放入到新的`tab`中了，最后重新计算`tab`下次扩容的**阈值**。  

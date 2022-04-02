@@ -37,7 +37,7 @@ INSERT INTO `demo_user_info` VALUES (4, '测试名称4', 'aa,bb,cc,e');
 [toc]
 ### 一、FIND_IN_SET()
 在`MySQL`手册中`FIND_IN_SET()`函数的语法解释：  
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/数据库/MySql/FIND_IN_SET、IN、LIKE、LOCATE的区别/FIND_IN_SET().png)
+![](https://xieruhua.gitee.io/images/JavaLearning/数据库/MySql/FIND_IN_SET、IN、LIKE、LOCATE的区别/FIND_IN_SET().png)
 
 >`FIND_IN_SET(str,strlist)`  
 `str` 要查询的字符串  
@@ -122,7 +122,7 @@ SELECT * FROM demo_user_info WHERE FIND_IN_SET("a",role_ids)
 
 ### 二、LOCATE()
 在MySQL手册中`LOCATE()`函数的语法解释：  
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/数据库/MySql/FIND_IN_SET、IN、LIKE、LOCATE的区别/LOCATE().png)
+![](https://xieruhua.gitee.io/images/JavaLearning/数据库/MySql/FIND_IN_SET、IN、LIKE、LOCATE的区别/LOCATE().png)
 
 >第一种语法返回字符串`str`中 **第一次** 出现的子字符串`substr`的位置。  
 >第二种语法返回字符串`str`中 **第一次** 出现的子字符串`substr`的位置，从位置`pos`开始。如果`substr`不在`str`中，则返回`0`。  

@@ -647,7 +647,7 @@ public void add(int index, E element) { // 将指定的元素（element）插入
 **`add(int index, E element)`的过程如下图所示**  
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/集合/ArrayList详解（JDK1.8）/add的过程演示.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/ArrayList详解（JDK1.8）/add的过程演示.png)
 </center>
 
 ### 4. remove方法
@@ -706,7 +706,7 @@ private void fastRemove(int index) {    // 私有方法，供上面的remove方�
 **`remove(int index)`方法的过程如下图所示**  
 <center>
 
-![](https://raw.githubusercontent.com/XieRuhua/images/master/JavaLearning/Java相关/Java基础等/集合/ArrayList详解（JDK1.8）/remove的过程演示.png)
+![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/ArrayList详解（JDK1.8）/remove的过程演示.png)
 </center>
 
 #### remove(Object o)：
