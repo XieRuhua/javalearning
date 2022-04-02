@@ -2473,7 +2473,7 @@ static int hash(int h) {
 **所谓 “拉链法” 就是：将`链表`和`数组`相结合。** 也就是说创建一个`链表数组`，数组中每一格就是一个`链表`。若遇到哈希冲突，则将冲突的值加到`链表`中即可。
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK7-拉链式结构.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK7-拉链式结构.png)
 </center>
 
 #### HashMap的属性：
@@ -3252,7 +3252,7 @@ final Node<K,V> untreeify(HashMap<K,V> map) {
 由于结果只取决于`节点 hash 值`的倒数第 `5` 位，而此位置的值刚好为`老表的容量值 16`，因此此时新表的索引位置的计算可以替换为 **<font color="red">计算3</font>** ，直接使用`节点的 hash 值`与`老表的容量 16` 进行`位与运算`，如果结果为 `0` 则该节点在`新表的索引位置`为`原索引位置`，否则该节点在新表的`索引位置`为 “`原索引 + oldCap` 位置”。
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/扩容后，节点重hash为什么只可能分布在“原索引位置”与“原索引+oldCap位置”？.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/扩容后，节点重hash为什么只可能分布在“原索引位置”与“原索引+oldCap位置”？.png)
 </center>
 
 ### 5. remove 方法
@@ -3485,14 +3485,14 @@ final void removeTreeNode(HashMap<K,V> map, Node<K,V>[] tab,
     * 链表中移除一个节点只需如下图操作，其他操作同理
     <center>
 
-    ![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/移除节点：链表.png)
+    ![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/移除节点：链表.png)
     </center>
 
     * `红黑树`在维护`链表结构`时，移除一个节点只需如下图操作（`红黑树`中增加了一个 `prev` 属性），其他操作同理。  
       注：此处只是`红黑树`维护`链表结构`的操作，`红黑树`还需要单独进行`红黑树`的移除或者其他操作。
     <center>
     
-    ![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/移除节点：红黑树.png)
+    ![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/移除节点：红黑树.png)
     </center>
 * **第12.6 步：** 寻找 `replacement`，用来替换掉 `p 节点` 。为什么 `sr` 是 `replacement` 的首选，`p` 为备选？
     * **解析：** 首先看 `sr` 是什么？从代码中可以看到 `sr` 第一次被赋值时，是在 `s节点` 进行了`向左穷遍历`结束后，因此此时 `s节点` 是没有`左节点`的，`sr` 即为 `s节点` 的`右节点`。  
@@ -3511,7 +3511,7 @@ final void removeTreeNode(HashMap<K,V> map, Node<K,V>[] tab,
 * **第三次调整：** 将 `replacement节点` 覆盖掉 `p节点`
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/移除节点后红黑树的调整步骤.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/移除节点后红黑树的调整步骤.png)
 </center>
 
 ## 五、扩容和死循环分析
@@ -3522,7 +3522,7 @@ final void removeTreeNode(HashMap<K,V> map, Node<K,V>[] tab,
 在`JDK 1.8` 以前，导致死循环的主要原因是扩容后，节点的顺序会反掉，如下图：**扩容前 `节点A` 在 `节点C` 前面，而扩容后 `节点C` 在 `节点A` 前面。**
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK7扩容图示.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK7扩容图示.png)
 </center>
 
 ### 2. JDK 1.8 的HashMap扩容过程
@@ -3574,13 +3574,13 @@ else { // preserve order
 先看下老表和新表计算索引位置的过程：（`hash`计算省略前面 28 位 `0`，只看最后 `4` 位）
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK8扩容寻找hash位置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK8扩容寻找hash位置.png)
 </center>
 
 **具体扩容过程：**  
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK8扩容图示.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK8扩容图示.png)
 </center>
 
 **结果：** 可以看出，扩容后，`节点A` 和`节点C` 的先后顺序跟扩容前是一样的。  

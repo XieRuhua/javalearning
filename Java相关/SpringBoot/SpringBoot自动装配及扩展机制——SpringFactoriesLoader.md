@@ -134,7 +134,7 @@ public @interface AutoConfigurationPackage {
 `@EnableAutoConfiguration` 注解启用自动配置，其可以帮助 `SpringBoot` 应用将所有符合条件的 `@Configuration` 配置都加载到当前 `IoC 容器`之中，如下图：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/@EnableAutoConfiguration装配过程.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/@EnableAutoConfiguration装配过程.png)
 </center>
 
 通过源码分析一下`@EnableAutoConfiguration`的装配过程：
@@ -293,13 +293,13 @@ public final class SpringFactoriesLoader {
 文件`META-INF/spring.factories`的位置：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/文件factories的位置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/文件factories的位置.png)
 </center>
 
 内容：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/文件factories的内容.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/文件factories的内容.png)
 </center>
 
 **过程简单总结：**  
@@ -601,7 +601,7 @@ mvn clean install -Dmaven.test.skip=true
 附：完整项目结构如下
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/自定义start完整项目结构.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/自定义start完整项目结构.png)
 </center>
 
 **注：去掉启动类的原因**  
@@ -632,7 +632,7 @@ class DemoApplicationTests {
 执行结果如下：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/调用自定义start的执行结果.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/调用自定义start的执行结果.png)
 </center>
 
 可以看到这里打印的是自定义`starter`中默认的配置文件值。  
@@ -644,7 +644,7 @@ javaboy.msg=java
 再次执行，结果如下：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/调用自定义start的执行结果2.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/调用自定义start的执行结果2.png)
 </center>
 可以看到正确获取了配置文件中的内容。
 
@@ -653,13 +653,13 @@ javaboy.msg=java
 自定义starter里面去掉SpringBoot的打包插件是因为该插件打包会生成一个 **BOOT-INF**文件夹：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/不去掉springBoot打包插件的打包结果示意图.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/不去掉springBoot打包插件的打包结果示意图.png)
 </center>
 
 导致自定义的类会找不到：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/不去掉springBoot打包插件打的包执行异常截图.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/SpringBoot/SpringBoot自动装配及扩展机制——SpringFactoriesLoader/不去掉springBoot打包插件打的包执行异常截图.png)
 </center>
 
 **因此用默认的maven打包方式即可。**

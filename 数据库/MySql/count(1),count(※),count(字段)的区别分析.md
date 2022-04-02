@@ -107,7 +107,7 @@ select count(1),count(*),count(test_column) from test_info;
 ```
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/数据库/MySql/count(1),count(※),count(字段)的区别分析/count(1),count(※),count(字段)的结果对比.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/count(1),count(※),count(字段)的区别分析/count(1),count(※),count(字段)的结果对比.png)
 </center>
 
 **小结：**  

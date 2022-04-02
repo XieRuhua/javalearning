@@ -34,7 +34,7 @@
 而本片笔记介绍的`gitee`也有限制，但是不会太影响个人使用
 <center> 
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/Gitee社区版空间配额说明.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/Gitee社区版空间配额说明.png)
 </center>
 
 个人免费可以使用的仓库总容量为 `5G`，我们可以大概计算一下，假设每张图片大小为`100KB`，那么`5G` 空间可以存储多少图片呢
@@ -55,7 +55,7 @@
 **新建仓库**
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/创建图床仓库.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/创建图床仓库.png)
 </center>
 
 **注意：创建完成之后，仓库一定要选择开源，否则生成的图片外链别人会没有访问权限。**
@@ -68,7 +68,7 @@
 打开`Gitee`设置，找到私人令牌，并新建：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/Gitee私人令牌.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/Gitee私人令牌.png)
 </center>
 
 **注意：图床需要的只是上传，放开这两个功能就够了**
@@ -81,25 +81,25 @@
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo插件配置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo插件配置.png)
 </center>
 
 然后在 **“图床设置”** 中可以看到Gitee选项，如果没有就重启一下`PicGo`：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo设置1.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo设置1.png)
 </center>
 
 可以在 **“PicGo设置”** 中关掉不需要的图床入口：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo设置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo设置.png)
 </center>
 
 接下来点击 **“gitee”** 开始配置：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo的Gitee设置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/PicGo的Gitee设置.png)
 </center>
 
 **填写说明：**
@@ -116,7 +116,7 @@
 如果出现`404`，请检查一下 **repo仓库名** 是否写错了。
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/404.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和Gitee搭建个人图床/404.png)
 </center>
 
 

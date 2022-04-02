@@ -7,7 +7,7 @@
 `LinkedList`是基于链表结构的一种集合长。基本数据结构如下：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/LinkedList的链表结构.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/LinkedList的链表结构.png)
 </center>
 
 `ArrayList`继承于 `AbstractSequentialList` ，实现了 `List`, `Deque`, `Cloneable`, `java.io.Serializable` 这些接口。
@@ -1441,7 +1441,7 @@ void linkLast(E e) {    // 将e放到链表的最后一个节点
 **过程如图：**
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/linkLast方法执行过程.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/linkLast方法执行过程.png)
 </center>
 
 ### 7. linkBefore方法
@@ -1467,7 +1467,7 @@ void linkBefore(E e, Node<E> succ) {    // 将e插入succ节点前面
 **过程如图：**
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/linkBefore方法执行过程.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/linkBefore方法执行过程.png)
 </center>
 
 ### 8. unlink方法
@@ -1508,5 +1508,5 @@ E unlink(Node<E> x) {   // 移除链表上的x节点
 **过程如图：**  
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/unlink方法执行过程.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/LinkedList详解（JDK1.8）/unlink方法执行过程.png)
 </center>

@@ -31,7 +31,7 @@ Java中的锁大体分为两类： **"synchronized"关键字锁** 和 **"JUC"(ja
 ## 二、锁分类及特性描述
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/锁分类.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/锁分类.png)
 </center>
 
 ### 1. 分类
@@ -93,7 +93,7 @@ public synchronized StringBuffer append(String str) {
 先看一下对象头中存储内容：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/对象头中存储内容.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/对象头中存储内容.png)
 </center>
 
 **每一个线程在准备获取共享资源时，执行步骤如下：**
@@ -844,7 +844,7 @@ public class LockTest {
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/读写锁：读优先锁.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/读写锁：读优先锁.png)
 </center>
 
 **写优先锁** 期望的是写锁能被更多的线程持有，以便提高写线程的并发性。  
@@ -852,7 +852,7 @@ public class LockTest {
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/读写锁：写优先锁.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/读写锁：写优先锁.png)
 </center>
 
 读优先锁对于读线程并发性更好，但也不是没有问题：
@@ -886,7 +886,7 @@ public class LockTest {
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/对象头中存储内容.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/对象头中存储内容.png)
 </center>
 
 **具体步骤：**  
@@ -1423,7 +1423,7 @@ class MyTest {
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/线程流程图.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/线程流程图.png)
 </center>
 
 主要是搞清楚, `sleep`, `yield`, `wait`, `notify`和`notifyAll`对于锁的处理，（线程详细介绍参考其他笔记）简单比较如下:
@@ -1475,7 +1475,7 @@ void foo() {
 一个对象在`JVM`中的内存布局包括 **对象头**、**实例数据** 和 **对齐填充**，`synchronized`锁就是通过`对象头`来实现锁的。
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/实例对象和数组对象简图.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/实例对象和数组对象简图.png)
 </center>
 
 **`synchronized`还支持偏向锁、轻量级锁和重量级锁。**  
@@ -1491,7 +1491,7 @@ void foo() {
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/对象头中存储内容.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/对象头中存储内容.png)
 </center>
 
 注意到无锁和偏向锁在 **”Mark Word”** 的倒数第三bit位中中分别采用`0`和`1`标记。
@@ -1954,7 +1954,7 @@ false
 
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/原子类.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/锁（Java）/原子类.png)
 </center>
 
 **如果同一个变量要被多个线程访问，则可以使用该包中的类。**

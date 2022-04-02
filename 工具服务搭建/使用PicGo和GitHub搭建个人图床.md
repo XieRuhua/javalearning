@@ -23,11 +23,11 @@
 #### 生成GitHub私人令牌（token）步骤
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github设置1.png)  ![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github设置2.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github设置1.png)  ![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github设置2.png)
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github创建token-1.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github创建token-1.png)
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github创建token-2.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/github创建token-2.png)
 </center>
 
 说明：
@@ -41,7 +41,7 @@
 接下来点击 **“GitHub图床”** 开始配置：
 <center>
 
-![](https://xieruhua.gitee.io/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/PicGo的GitHub设置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/PicGo的GitHub设置.png)
 </center>
 
 **填写说明：**
