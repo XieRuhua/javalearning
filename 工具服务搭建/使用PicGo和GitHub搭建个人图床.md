@@ -41,7 +41,7 @@
 接下来点击 **“GitHub图床”** 开始配置：
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/PicGo的GitHub设置.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/使用PicGo和GitHub搭建个人图床/PicGo的GitHub上传设置.png)
 </center>
 
 **填写说明：**
@@ -49,7 +49,10 @@
 - **设定分支名：** 仓库分支，默认`master`；
 - **设定Token:** 这个比较重要，就是上面创建仓库后创建的私人令牌明文，直接粘贴上去就行， **如果忘记了那么只能删除重新再创建填写了；**
 - **指定存储路径:** 填写仓库下面某个文件夹名字，也就是你存放图片的位置，如果不填就是仓库根目录下；
-- **设定值定义域名：** 这个比较重要，设置的就是图片上传成功之后，自动复制到剪切板中的markdown图片访问前缀，  
-  这里使用的github图床，则自定义域名为 https://raw.githubusercontent.com/XieRuhua/images/master （即https://raw.githubusercontent.com/用户名/仓库名/分支名 ）。
+- **设定值定义域名：** 这个比较重要，设置的就是图片上传成功之后，自动复制到剪切板中的markdown图片访问前缀。  
+  ~~github图床静态资源自定义域名为 https://raw.githubusercontent.com/XieRuhua/images/master （即https://raw.githubusercontent.com/用户名/仓库名/分支名 ）~~  
+  注意：前面说的自定义域名是github访问静态资源本身的路径，但是github由于访问很慢，所以需要加上`CDN`访问，则访问地址应该改为https://cdn.jsdelivr.net/gh/XieRuhua/images (即https://cdn.jsdelivr.net/gh/github用户名/仓库名)， 这样访问就不会很慢。
 
 确定之后，直接在 **“上传区”** 上传图片即可。
+
+**补充：`jsDelivr` 是一个免费开源的 `CDN` 解决方案。详情见：[jsdelivr官网](https://www.jsdelivr.com/)**
