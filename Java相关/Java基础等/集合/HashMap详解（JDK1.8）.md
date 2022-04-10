@@ -3516,14 +3516,100 @@ final void removeTreeNode(HashMap<K,V> map, Node<K,V>[] tab,
 
 ## 五、扩容和死循环分析
 ### 1. 死循环
-在 `JDK 1.8` 以前，`Java` 语言在并发情况下使用 `HashMap` 造成 **Race Condition（紊乱情况）** ，从而导致 **死循环** 。  
-程序经常占了 `100%` 的 `CPU`，查看堆栈，会发现程序都 `Hang` 在了 `“HashMap.get()”` 这个方法上了，重启程序后问题消失。具体分析可以查看这篇文章：[疫苗：JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)，有人将这个问题当成一个 `bug` 提给了 `Sun`，但是 `Sun` 认为这并不是个 `bug`，**因为`HashMap` 本来就不保证并发的线程安全性，在并发下，要用 `ConcurrentHashMap` 来代替**。
+`Java` 语言在并发情况下使用 `HashMap` 时，程序经常占了 `100%` 的 `CPU`，查看堆栈，会发现程序都 `Hang` 在了 `“HashMap.get()”` 这个方法上了，重启程序后问题消失。具体分析可以查看这篇文章：[疫苗：JAVA HASHMAP的死循环](https://coolshell.cn/articles/9606.html)，有人将这个问题当成一个 `bug` 提给了 `Sun`，但是 `Sun` 认为这并不是个 `bug`，**因为`HashMap` 本来就不保证并发的线程安全性，在并发下，要用 `ConcurrentHashMap` 来代替**。
 
-在`JDK 1.8` 以前，导致死循环的主要原因是扩容后，节点的顺序会反掉，如下图：**扩容前 `节点A` 在 `节点C` 前面，而扩容后 `节点C` 在 `节点A` 前面。**
+**下面进行HashMap死循环分析：**  
+`HashMap`是一个`数组+链表`（JDK1.8之前，JDK1.8之后结构改为`数组+链表+红黑树`）的结构，当一个`key/value对`被加入时，首先会通过`Hash`算法定位出这个键值对要被放入的桶，然后就把它插到相应桶中。如果这个桶中已经有元素了，那么发生了碰撞，这样会在这个桶中形成一个链表。
+
+一般来说，当有数据要插入`HashMap`时，都会检查容量有没有超过设定的`thredhold（扩容阈值）`，如果超过，需要增大`HashMap`的尺寸（扩容），但是这样一来，就需要对整个`HashMap`里的节点进行重哈希操作。在重哈希的过程中，就会出现`HashMap`线程不安全的典型表现 ———— 死循环。
+
+`HashMap`重哈希的关键源码如下：
+```java
+/**
+ * Transfers all entries from current table to newTable.
+ */
+void transfer(Entry[] newTable) {
+    // 将原数组 table 赋给数组 src
+    Entry[] src = table;
+    int newCapacity = newTable.length;
+    // 将数组 src 中的每条链重新添加到 newTable 中
+    for (int j = 0; j < src.length; j++) {
+        Entry<K, V> e = src[j];
+        if (e != null) {
+            src[j] = null;   // src 回收
+            // 将每条链的每个元素依次添加到 newTable 中相应的桶中
+            do {
+                Entry<K, V> next = e.next;
+                // e.hash指的是 hash(key.hashCode())的返回值;
+                // 计算在newTable中的位置，注意原来在同一条子链上的元素可能被分配到不同的桶中
+                int i = indexFor(e.hash, newCapacity);
+                e.next = newTable[i];
+                newTable[i] = e;
+                e = next;
+            } while (e != null);
+        }
+    }
+}
+```
+#### 1.1. 单线程环境下的重哈希过程演示：
+单线程情况下，`rehash` 不会出现任何问题，步骤如下图所示：
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/HashMap详解（JDK1.8）/JDK7扩容图示.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/ConcurrentHashMap详解（JDK1.7和JDK1.8）/HashMap单线程扩容演示.png)
 </center>
+
+假设`hash`算法就是最简单的 `key mod table.length`（也就是和桶的个数取模）。最上面的是`old hash表`，其中的`Hash表桶`的个数为`2`，所以对于 `key = 3、7、5` 的键值对在 `mod 2`以后都冲突在`table[1]`这里了。  
+接下来的三个步骤是，`Hash`表`resize`成`4` **（原容量的2倍）** ，然后对所有的键值对重哈希的过程。
+
+**<font color='red'>头插法设计思想：局部性原理，HashMap采用头插法而没有采用尾插法有一点考虑是性能优化，认为最近put进去的元素，被get的概率相对较其他元素大，采用头插法能够更快得获取到最近插入的元素。</font>**  
+**<font color='red'>但头插法的设计有一个特点，就是扩容之后，链表上的元素顺序会反过来，这也是死循环的一个重要原因。</font>**
+
+#### 1.2. 多线程环境下的重哈希过程演示：
+假设有两个线程，分别用 **紫色** 和 **蓝色** 标注不同的线程扩容后的`HashMap`对象，被这两个线程共享的资源正是要被重哈希的原来`1号桶`中的`Entry链（key = 3、7、5）`。  
+再看一下`transfer`方法中的这个细节：
+```java
+do {
+    Entry<K,V> next = e.next;       // <--假设线程一执行到这里就被调度挂起了
+    int i = indexFor(e.hash, newCapacity);
+    e.next = newTable[i];
+    newTable[i] = e;
+    e = next;
+} while (e != null);
+```
+假设`线程1`执行到定义`next`处被阻塞挂起，而`线程2`执行完成了，于是`线程2`执行完成之后如下图所示：
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/ConcurrentHashMap详解（JDK1.7和JDK1.8）/HashMap多线程扩容演示（死循环）1.png)
+</center>
+
+注意：在`线程2`重哈希后，`线程1`的`指针e`和`指针next`分别指向了`线程2`重组后的`链表`中的元素**（`e`指向了`key3`，而`next`指向了`key7`）。**   
+此时，`线程1`被调度回来继续执行：
+1. `线程1`先是执行 `newTalbe[i] = e;`
+2. 然后执行 `e = next;`，导致了`e`指向了`key7`；
+3. 接下来下一次循环的`next = e.next`导致了`next`指向了`key3`
+
+如下图所示：
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/ConcurrentHashMap详解（JDK1.7和JDK1.8）/HashMap多线程扩容演示（死循环）2.png)
+</center>
+
+
+这时，`线程1`有条不紊的工作着：把`key7`摘下来，放到`newTable数组`的第一个，然后把`e`和`next`往下移，如下图所示：
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/ConcurrentHashMap详解（JDK1.7和JDK1.8）/HashMap多线程扩容演示（死循环）3.png)
+</center>
+
+在此时，特别需要注意的是，当执行`e.next = newTable[i]`后，会导致 `key3.next` 指向了 `key7`，但是此时的`key7.next` 已经指向了`key3`，环形链表就这样出现了，如下图所示：
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/集合/ConcurrentHashMap详解（JDK1.7和JDK1.8）/HashMap多线程扩容演示（死循环）4.png)
+</center>
+
+于是，当`线程1`调用`HashMap.get(11)`（说明：`11`是因为假设的取模的方式定位桶的话，`11`对应的桶就是`key3`和`key7`所在的桶）时，就进入了 **`环形链表`** 中一直死循环，因为一直找不到`Key=11`的元素，而又发现一直有 **后继节点** ，所以永远也跳不出循环悲剧就出现了 —— Infinite Loop。
+
+**这是`HashMap`在并发环境下使用中最为典型的一个问题，就是在`HashMap`进行扩容重哈希时导致`Entry链`形成`环形链表`。就会导致在同一个桶中进行`插入`、`查询`、`删除`等操作时陷入`死循环`。**
 
 ### 2. JDK 1.8 的HashMap扩容过程
 > 进行扩容时，会伴随着一次重新 `hash` 分配，并且会遍历 `hash` 表中所有的元素，是非常耗时的。在编写程序中， **要尽量避免 `resize`** 。
