@@ -1,4 +1,7 @@
-# java8 流式处理集合，数组等
+# Java8 流式处理集合，数组等
+
+
+其他案例详见链接：https://zhuanlan.zhihu.com/p/287833436
 
 ## 1.什么是Stream流？
 `Stream流`是数据渠道，用于操作数据源（集合、数组等）所生成的元素序列。
@@ -35,12 +38,19 @@ List<Integer> collect = integerStream.collect(Collectors.toList());
 //如果没有 惰性计算，那么很明显会先输出偶数，然后输出 分割线。而实际的效果是。
 ```
 ### 2.3.特定性能优势
-1. 针对简单的操作，比如基础类型的遍历，使用`for循环`性能要明显高于`串行Stream`操作。但`Stream`的`并行`操作随着服务器的核数增加，会优于`for循环`。
-2. 针对复杂操作，`串行Stream`性能与`for循环`不差上下，但`并行Stream`的性能已经是`for循环`无法匹敌了。（可以参考笔记：[HashMap详解（JDK1.8）](https://xieruhua.github.io/javalearning/#/./Java%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80%E7%AD%89/%E9%9B%86%E5%90%88/HashMap%E8%AF%A6%E8%A7%A3%EF%BC%88JDK1.8%EF%BC%89) 中最后的迭代对比）
-3. 特别是针对一个集合进行多层过滤并归约操作，无论从写法上或性能上都要明显优于`for循环`。  
-参考性能测试：  
-[Java8 Stream性能如何及评测工具推荐](https://www.cnblogs.com/secbro/p/11653574.html)   
-[Java8 中用法优雅的 Stream 性能也"优雅"吗？](https://zhuanlan.zhihu.com/p/158794416)
+1. stream不存储数据，而是按照特定的规则对数据进行计算，一般会输出结果。
+2. stream不会改变数据源，通常情况下会产生一个新的集合或一个值。
+3. stream具有延迟执行特性，只有调用终端操作时，中间操作才会执行。
+4. 针对简单的操作，比如基础类型的遍历，使用`for循环`性能要明显高于`串行Stream`操作。但`Stream`的`并行`操作随着服务器的核数增加，会优于`for循环`。
+5. 针对复杂操作，`串行Stream`性能与`for循环`不差上下，但`并行Stream`的性能已经是`for循环`无法匹敌了。（可以参考笔记：[HashMap详解（JDK1.8）](https://xieruhua.github.io/javalearning/#/./Java%E7%9B%B8%E5%85%B3/Java%E5%9F%BA%E7%A1%80%E7%AD%89/%E9%9B%86%E5%90%88/HashMap%E8%AF%A6%E8%A7%A3%EF%BC%88JDK1.8%EF%BC%89) 中最后的迭代对比）
+6. 特别是针对一个集合进行多层过滤并归约操作，无论从写法上或性能上都要明显优于`for循环`。  
+    参考性能测试：  
+    [Java8 Stream性能如何及评测工具推荐](https://www.cnblogs.com/secbro/p/11653574.html)   
+    [Java8 中用法优雅的 Stream 性能也"优雅"吗？](https://zhuanlan.zhihu.com/p/158794416)
+
+注意：stream是“顺序流”，由主线程按顺序对流执行操作，如果想要转换成“并行流”（调用parallelStream()方法，内部以多线程并行执行的方式对流进行操作）好处是：如果流中的数据量足够大，并行流可以加快处速度。
+
+
 
 
 ## 3.stream抽象流程步骤
@@ -50,7 +60,7 @@ List<Integer> collect = integerStream.collect(Collectors.toList());
 * **Collection.stream()：** 从集合获取流；
 * **Collection.parallelStream()：** 从集合获取并行流；
 * **Arrays.stream(T array)：** 通过Arrays中的静态方法获取数据流；
-* **Stream.of()：** 从数组获取流；
+* **Stream.of()：** 从数组获取流（java.util.Arrays.stream(T[] array)方法）；
 * **BufferedReader.lines()：** 从输入流中获取流；
 * **IntStream.of()：** 从静态方法中获取流；
 * **Stream.generate()：** 自己生成流。
@@ -70,7 +80,7 @@ Stream<String> stream4 = Stream.of("11","2");
 ```
 ### 3.2. 数据处理
 **数据处理/转换（`intermedia`）** 步骤可以有多个操作，这步也被称为 **`intermedia`（中间操作）** 。  
-在这个步骤中不管怎样操作，它返回的都是一个新的流对象，原始数据不会发生任何改变，而且这个步骤是惰性计算处理的；  
+在这个步骤中不管怎样操作，它返回的都是一个新的流对象，原始数据不会发生任何改变，而且这个步骤是 **惰性计算** 处理的；  
 也就是说只调用方法并不会开始处理，只有在真正的开始收集结果时，中间操作才会生效，而且如果遍历没有完成，想要的结果已经获取到了（比如获取第一个值），会停止遍历，然后返回结果。
 
 **惰性计算可以显著提高运行效率。**
@@ -81,7 +91,7 @@ Stream<String> stream4 = Stream.of("11","2");
 * **skip(n)：** 跳过元素，返回一个扔掉了前`n`个元素的流。若流中元素不足`n`个，则返回一个空流，与`limit(n)`互补。  
 * **distinct：** 筛选，通过流所生成元素的`hashcode()`和`equals()`去重复元素。
 
-数据处理演示。
+数据处理演示：
 ```java
 @Test
 public void streamDemo(){
@@ -208,6 +218,7 @@ public void filterTest() {
 
 ### 4.4. findFirst
 `findFirst` 可以查找出 `Stream =流` 中的第一个元素，它返回的是一个 `Optional类型`：
+
 ```java
 /**
  * 查找第一个数据
@@ -224,7 +235,11 @@ public void findFirstTest(){
 // 1
 ```
 
+补充：Optiona概念
+Optional类是一个可以为null的容器对象。如果值存在则isPresent()方法会返回true，调用get()方法会返回该对象。
+
 ### 4.5. collect / toArray
+
 `Stream流`可以轻松的转换为其他结构，下面是几种常见的示例：
 ```java
 /**
@@ -346,3 +361,4 @@ public void partitioningByTest() {
 // 未成年人：[11, 13, 14]
 // 成年人：[22, 25, 26]
 ```
+

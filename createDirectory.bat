@@ -1,2 +1,2 @@
 python ./base.py
-pause
+#pause
