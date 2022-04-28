@@ -400,7 +400,8 @@ true
 
 ## 五、ThreadLocal内存泄漏及为何ThreadlocalMap 中key是 WeakReference类型（弱引用）
 ### 1. 什么是内存泄漏
-> 在Java中，内存泄漏就是存在一些被分配的对象，不会被GC所回收，然而它却一直占用着内存。
+> 内存泄露 （`Memory Leak`）：就是申请了内存，但是没有释放，导致内存空间浪费。  
+>在Java中，内存泄漏就是存在一些被分配的对象，不会被GC所回收，然而它却一直占用着内存。
 >
 > 这些对象有下面两个特点：
 > * 这些对象是可达的：即在有向图中，存在通路可以与其相连；
@@ -499,7 +500,7 @@ public class ThreadLocal<T> {
 </center>
 
 代码解释，如：
-```
+```java
 ThreadLocal<UserInfo> userInfoThreadLocal = new ThreadLocal<>();
 userInfoThreadLocal.set(userInfo);
 ```
@@ -597,7 +598,7 @@ public class Thread implements Runnable {
 
 ## 六、ThreadLocal和Synchronized比较
 `ThreadLocal`是解决线程安全问题一个很好的思路，它通过为每个线程提供一个独立的变量副本解决了变量并发访问的冲突问题；  
-在很多情况下，`ThreadLocal`比直接使用`synchronized`同步机制解决线程安全问题更简单，更方便，且结果程序拥有更高的并发性。
+在很多情况下，`ThreadLocal`比直接使用`synchronized`同步机制解决线程安全问题更简单，更方便，且程序拥有更高的并发性。
 
 `ThreadLocal`和`Synchronized`都是为了解决多线程中相同变量的访问冲突问题，不同的点是：
 - **`Synchronized`用于线程间的数据共享：** 是通过线程等待，**牺牲时间来解决访问冲突**；
@@ -610,13 +611,13 @@ public class Thread implements Runnable {
 **补充：**`Spring`使用`ThreadLocal`解决线程安全问题：  
 在一般情况下，只有无状态的`Bean`才可以在多线程环境下共享，而在`Spring`中，绝大部分`Bean`都可以声明为`singleton(见说明)`作用域。就是因为Spring对一些Bean（如：`RequestContextHolder`、`TransactionSynchronizationManager`、`LocaleContextHolder`等）中非线程安全状态采用ThreadLocal进行处理（也是ThreadLocal的应用场景），让它们也成为线程安全的状态，因为有状态的Bean就可以在多线程中共享了。
 
-> **singleton作用域说明：**
->
-> 当一个bean的作用域设置为singleton，那么Spring IOC容器中只会存在一个共享的bean实例，并且所有对bean的请求，只要id与该bean定义相匹配，则只会返回bean的同一实例。
-> 这个单一实例会被存储到**单例缓存（singleton cache）**中，并且所有针对该bean的后续请求和引用都将返回被缓存的对象实例；
->
->**要注意的是singleton作用域和GOF设计模式中的单例模式是完全不同的：**  
-> 单例设计模式表示一个`ClassLoader`中只有一个`class`存在，而这里的`singleton`则表示一个容器对应一个`bean`，也就是说当一个`bean`被标识为`singleton`时候，`spring`的`IOC`容器中只会存在一个该`bean`。 
+> **singleton作用域说明：**  
+> 当一个bean的作用域定义为`singleton`时，`Spring IoC` 容器会创建该 bean 定义的对象的唯一一个实例。并将该单个实例存储在此类单例 bean 的 **单例缓存（`singleton cache`）中** ，并且所有针对该bean的后续请求和引用都将返回被缓存的对象实例。
+
+>**Spring 的单例 bean 概念不同于`Gang of Four (GoF)` 模式中定义的单例模式：**  
+> `GoF` 单例对对象的范围进行了硬编码，以使得每个 `ClassLoader` 只创建一个特定类的一个实例。而Spring 单例的范围是相对每个容器和每个 bean而言。这意味着，如果在单个 `Spring IOC` 容器中为特定类定义一个 bean，则 Spring 容器会创建该 bean 定义的类的有且仅有一个实例。
+
+>**单例作用域是 Spring 中的默认作用域。（也就是说，如果无特别声明作用域时，该bean就是单例的）**
 
 ## 补充1：ThreadLocalMap
 **<font color="red">对于`ThreadLocal`来说关键就是内部的`ThreadLocalMap`。</font>**
@@ -788,9 +789,8 @@ public class ThreadLocalTest {
 #### 2.2 set()方法如何处理hash冲突
 虽然`ThreadLocalMap`中使用了**黄金分隔数**来作为`hash`计算因子，大大减少了`Hash`冲突的概率，但是仍然会存在冲突。
 
-在`HashMap`中解决冲突的方法是在数组上构造一个**链表**结构，冲突的数据挂载到链表上，如果链表长度超过一定数量则会转化成**红黑树**。
-
-而`ThreadLocalMap`中并没有链表和红黑树结构，所以这里不能适用`HashMap`解决冲突的方式了。
+在`HashMap`中解决冲突的方法是在数组上构造一个**链表**结构，冲突的数据挂载到链表上，如果链表长度超过一定数量则会转化成**红黑树**。  
+而`ThreadLocalMap`中并没有 **链表** 和 **红黑树** 结构，所以这里不能适用`HashMap`解决冲突的方式了。
 
 > 注明： 下面所有示例图中，绿色块`Entry`代表正常数据，灰色块代表`Entry`的`key`值为`null`，已被垃圾回收。白色块表示`Entry`为`null`。
 
@@ -827,7 +827,7 @@ public class ThreadLocalTest {
 ![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况3：槽位数据不为空，往后遍历过程中，在找到Entry为null的槽位之前，未遇到key过期的Entry.png)
 </center>
 
-遍历散列数组，线性往后查找，如果找到`Entry`为`null`的槽位，则将数据放入该槽位中，或者往后遍历过程中，遇到了**key值相等（同一线程)**的数据，直接更新即可。
+遍历散列数组，线性往后查找，如果找到`Entry`为`null`的槽位，则将数据放入该槽位中，或者往后遍历过程中，遇到了 **key值相等（同一线程)** 的数据，直接更新即可。
 
 ##### 第四种情况：槽位数据不为空，往后遍历过程中，在找到`Entry`为`null`的槽位之前，遇到`key`过期的`Entry`：
 
@@ -877,7 +877,7 @@ public class ThreadLocalTest {
 ![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/Java相关/Java基础等/并发/ThreadLocal详解（JDK1.8）/ThreadLocalMap的set()插入逻辑情况4：第四步2.png)
 </center>
 
-替换完成后也是进行过期元素清理工作，清理工作主要是有两个方法：`expungeStaleEntry()`和`cleanSomeSlots()`，具体细节后面会讲到，请继续往后看。
+替换完成后也是进行过期元素清理工作，清理工作主要是有两个方法：探测式清理`expungeStaleEntry()`和启发式清理`cleanSomeSlots()`，具体细节后面会讲到。
 
 #### 2.4 ThreadLocalMap.set()源码详解
 `java.lang.ThreadLocal.ThreadLocalMap.set()`:
@@ -1333,7 +1333,7 @@ public class InheritableThreadLocalDemo {
     }
 }
 ```
-从执行结果可以看到子线程是拿不到父线程中的`ThreadLocal`的数据的：
+从执行结果可以看到子线程是拿不到父线程中的`ThreadLocal`的数据，而可以拿到父线程`InheritableThreadLocal`的数据：
 ```
 子线程获取父类threadLocal数据：null
 子线程获取父类inheritableThreadLocal数据：父类数据:inheritableThreadLocal
