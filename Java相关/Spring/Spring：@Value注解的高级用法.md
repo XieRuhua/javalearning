@@ -1,4 +1,4 @@
-# SpringBoot @Value注解的高级用法
+# Spring @Value注解的高级用法
 ****
 在日常开发中，经常会遇到需要在配置文件中，存储 `List` 或是 `Map` 这种类型的数据。Spring 原生是支持这种数据类型的，以配置 `List` 类型为例，对于 `.yml` 文件配置如下：
 ```yml
