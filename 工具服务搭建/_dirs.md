@@ -1,4 +1,5 @@
 
+#### [Centos7安装FastDFS](./工具服务搭建/Centos7安装FastDFS.md)
 #### [Centos7安装Java](./工具服务搭建/Centos7安装Java.md)
 #### [Centos7安装mysql5.7版本](./工具服务搭建/Centos7安装mysql5.7版本.md)
 #### [Centos7安装Nginx](./工具服务搭建/Centos7安装Nginx.md)
