@@ -1,4 +1,4 @@
-# Centos7  yum安装mysql5.7版本
+# Centos7安装mysql5.7版本
 
 ### 1. mysql下载
 ```shell
@@ -222,3 +222,65 @@ UPDATE mysql.user SET authentication_string= password ('XXXXXXX') WHERE User = '
 flush privileges ; 
 ```
 然后将之前加在配置文件里面的两句代码注释或删除掉，最后重启`mysql`服务，就可以使用刚刚设置的密码登录了。
+
+### 10. linux卸载mysql的步骤
+#### 10.1 首先查看mysql的安装情况
+```shell
+rpm -qa|grep -i mysql
+```
+
+显示之前安装了（ **注：`xxxxxxxx`为具体版本** ）：
+```shell
+MySQL-client-xxxxxxxx
+MySQL-server-xxxxxxxx
+```
+
+#### 10.2 停止mysql服务，并删除包
+删除命令：`rpm -e –nodeps 包名`
+```shell
+rpm -ev MySQL-client-xxxxxxxx
+rpm -ev MySQL-server-xxxxxxxx
+```
+
+如果提示依赖包错误，则使用以下命令尝试
+```shell
+rpm -ev MySQL-client-xxxxxxxx --nodeps
+```
+
+如果提示错误：`error: %preun(xxxxxx) scriptlet failed, exit status 1`  
+则用以下命令尝试:
+```shell
+rpm -e --noscripts MySQL-client-xxxxxxxx
+```
+
+#### 10.3 查找之前老版本mysql的目录、并且删除老版本mysql的文件和库
+查找`mysql`目录
+```shell
+find / -name mysql
+```
+
+查找结果如下：
+```shell
+/var/lib/mysql
+/var/lib/mysql/mysql
+/usr/lib64/mysql
+```
+
+删除对应的`mysql`目录
+```shell
+rm -rf /var/lib/mysql
+rm -rf /var/lib/mysql
+rm -rf /usr/lib64/mysql
+```
+
+注意：卸载后`/etc/my.cnf`不会删除，需要进行手工删除
+```shell
+rm -rf /etc/my.cnf
+```
+
+#### 10.4 再次查找机器是否安装mysql
+```shell
+rpm -qa|grep -i mysql
+```
+
+无结果，说明已经卸载彻底，接下来直接安装`mysql`即可。
