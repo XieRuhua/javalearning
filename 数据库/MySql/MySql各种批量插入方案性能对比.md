@@ -32,7 +32,7 @@ VALUES('0','userid_0','content_0',0),
 这里提供一些测试对比数据，分别是进行单条数据的导入与转化成一条`SQL`语句进行导入，分别测试`1百`、`1千`、`1万`条数据记录。  
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql各种批量插入方案性能对比/一条SQL语句插入多条数据.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql各种批量插入方案性能对比/一条SQL语句插入多条数据.png)
 </center>
 
 ### 2. 在事务中进行插入处理
@@ -54,7 +54,7 @@ COMMIT;
 这里也提供了测试对比，分别是不使用事务与使用事务在记录数为`1百`、`1千`、`1万`的情况。  
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql各种批量插入方案性能对比/在事务中进行插入多条数据.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql各种批量插入方案性能对比/在事务中进行插入多条数据.png)
 </center>
 
 ### 3. 数据有序插入
@@ -89,7 +89,7 @@ VALUES('2','userid_2','content_2',2);
 下面提供随机数据与顺序数据的性能对比，分别是记录为`1百`、`1千`、`1万`、`10万`、`100万`。  
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql各种批量插入方案性能对比/数据有序插入多条数据.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql各种批量插入方案性能对比/数据有序插入多条数据.png)
 </center>
 从测试结果来看，该优化方法的性能有所提高，但是提高并不是很明显。
 
@@ -97,7 +97,7 @@ VALUES('2','userid_2','content_2',2);
 上面提供了同时使用上面三种方法进行`INSERT`效率优化的测试。  
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql各种批量插入方案性能对比/综合对比.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql各种批量插入方案性能对比/综合对比.png)
 </center>
 
 从测试结果可以看到：  

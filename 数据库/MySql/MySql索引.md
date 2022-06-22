@@ -42,7 +42,7 @@
 索引是占据物理空间的，在不同的存储引擎中，索引存在的文件也不同。存储引擎是基于表的，以下分别使用MyISAM和InnoDB存储引擎建立两张表。  
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/MySQL表文件组成.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/MySQL表文件组成.png)
 </center>
 
 **存储引擎为`MyISAM`时：**  
@@ -291,7 +291,7 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/二叉查找树.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/二叉查找树.png)
 </center>
 
 二叉树特点：每个节点 **最多** 有`2`个分叉，`左子树`和`右子树`数据顺序 **左小右大** 。  
@@ -305,7 +305,7 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 比如以下这个情况，二叉树已经 **极度不平衡** 了，已经退化为**链表**了，检索速度大大降低。此时检索 **`id=7`** 的数据的所需要计算的次数已经变为 `7` 了。
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/二叉查找树退化为链表.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/二叉查找树退化为链表.png)
 </center>
 
 在数据库中，数据的自增是一个很常见的形式，比如一个表的主键是 自增`id`（而主键一般默认都是自增的），如果采取二叉树这种数据结构作为索引，那上面介绍到的不平衡状态导致的线性查找的问题必然出现。  
@@ -340,7 +340,7 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 如下图所示：
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/红黑树1.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/红黑树1.png)
 </center>
 
 但是如果我们顺序插入 **`1~16`** 个节点，查找 **`id=16`** 需要比较的节点数为 **`6`** 次。  
@@ -348,7 +348,7 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 **从根本上上看，红黑树并没有完全解决二叉查找树退化成链表的缺点，虽然这个“右倾”趋势远没有二叉查找树退化为线性链表那么夸张，** 但是数据库中的基本主键自增操作，主键一般都是数百万数千万的，如果红黑树存在这种问题，对于查找性能而言也是巨大的消耗，我们数据库不可能忍受这种无意义的等待的。
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/红黑树2.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/红黑树2.png)
 </center>
 
 **那么为了解决这种“严重右倾”或者“严重左倾”的情况，就需要考虑另一种更为严格的自平衡二叉树 `AVL树`。<font color="red">因为 `AVL树`是个绝对平衡的二叉树，因此他在调整二叉树的形态上消耗的性能会更多。</font>**
@@ -365,14 +365,14 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 如下面的`AVL树`顺序插入 **`1~7`** 个节点，查找 **`id=7`** 所要比较节点的次数为 **`3`** 。  
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/AVL树1.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/AVL树1.png)
 </center>
 
 如下面的`AVL树`顺序插入 **`1~16`** 个节点，查找 **`id=16`** 需要比较的节点数为 **`4`** 。从查找效率而言，`AVL树`查找的速度要高于红黑树的查找效率**（`AVL树`是 `4` 次比较，`红黑树`是 `6` 次比较）**。并且从树的形态看来，`AVL树`不存在`红黑树`的 **“右倾”** 问题。  
 **也就是说，大量的顺序插入不会导致查询性能的降低，这从根本上解决了红黑树的问题。**
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/AVL树2.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/AVL树2.png)
 </center>
 
 **总结一下 AVL 树的优点：**  
@@ -422,7 +422,7 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/B树.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/B树.png)
 </center>
 
 **总结来说，B树用作数据库索引有以下优点：**
@@ -445,7 +445,7 @@ select * from t where a=1 and b>1 and c=1;  -- a可以命中组合索引，b、c
 * `B+树`： **只有** `叶子节点` **才会存储数据** ，`非叶子节点` **只存储键值** 。`叶子节点`之间使用`双向指针`连接，最底层的叶子节点形成了一个 **`双向有序链表`** 。
 <center>
 
-![](https://cdn.jsdelivr.net/gh/XieRuhua/images/数据库/MySql/MySql索引/B+树.png)
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/数据库/MySql/MySql索引/B+树.png)
 </center>
 
 `B+树`的`最底层叶子节点`包含了 **所有** 的`索引`项。  
