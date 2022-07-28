@@ -14,7 +14,7 @@
 
 
 
-> 目前笔记总篇数：69 / <font size='2px' color='#ccc'>196-1961</font>
+> 目前笔记总篇数：71 / <font size='2px' color='#ccc'>198-1984</font>
 #### [Java相关](./Java相关/_dirs.md)
 #### [Linux相关](./Linux相关/_dirs.md)
 #### [业务场景](./业务场景/_dirs.md)
@@ -22,6 +22,7 @@
 #### [数据库](./数据库/_dirs.md)
 #### [方法、工具集锦](./方法、工具集锦/_dirs.md)
 #### [算法](./算法/_dirs.md)
+#### [运维](./运维/_dirs.md)
 #
 #
 >文档工具docsify：[官方文档-中文](https://docsify.js.org/#/zh-cn/)
