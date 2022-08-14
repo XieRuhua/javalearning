@@ -26,6 +26,9 @@ def create_dir_list(file_dir):
     # 根目录的拎出来单独生成
     rootDirsArr = []
 
+    # 所有笔记文件名，用于排除掉一个文件出现在多个文件夹时的重复计数
+    allFiles = []
+
     '''
     root:当前路径
     dirs:当前路径下所有子目录
@@ -34,7 +37,6 @@ def create_dir_list(file_dir):
     for root, dirs, files in os.walk(file_dir):
         # 需要写入的目录数组
         dirsArr = []
-
         # 首页固定的描述
         if root == "./":
             ## 获取备份文件中的数据（头文件）
@@ -54,7 +56,10 @@ def create_dir_list(file_dir):
                 dirsArr.append("#### [" + dirStr + "](./" + dirStr + "/_dirs.md)")
             elif ".md" in dirStr:
                 dirsArr.append("#### [" + dirStr.strip(".md") + "](" + root + "/" + dirStr + ")")
-                count += 1
+                # 排除掉一个文件出现在多个文件夹时的重复计数
+                if dirStr not in allFiles:
+                    count += 1
+                    allFiles.append(dirStr)
             elif ".png" in dirStr:
                 # 脑图加载并居中
                 dirsArr.append("<center> \n\n#### " + dirStr.strip(".png") + " 脑图\n![" + dirStr.strip(
