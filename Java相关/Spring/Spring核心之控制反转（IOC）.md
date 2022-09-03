@@ -600,7 +600,7 @@ private Car car;
 2. @Inject可以作用`CONSTRUCTOR`、`METHOD`、`FIELD`上 **（即：构造方法、方法、字段）**
 3. @Inject是根据类型进行自动装配的，如果需要按名称进行装配，则需要配合`@Named`；
 
-#### 4. 总结
+### 4. 总结
 1. `@Autowired` 是 `Spring` 自带的， `@Resource` 是 `JSR250` 规范实现的， `@Inject` 是 `JSR330` 规范实现的；
 2. `@Autowired`、`@Inject`用法基本一样，不同的是 `@Inject` **没有** `required` 属性；
 3. `@Autowired`、`@Inject`是默认按照类型匹配的， `@Resource` 是按照名称匹配的；
