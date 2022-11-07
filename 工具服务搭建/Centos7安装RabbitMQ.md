@@ -10,7 +10,7 @@
 
 |          | 文件名及版本号                           | 下载地址                                                     | 笔记安装包下载地址 |
 | -------- | --------------------------------------- | ------------------------------------------------------------ | ------------------ |
-| Erlang   | esl-erlang_23.3.1-1_centos_7_amd64.rpm  | https://packages.erlang-solutions.com/erlang/rpm/centos/8/x86_64/esl-erlang_23.3.1-1~centos~8_amd64.rpm | [gitee仓库：esl-erlang_23.3.1-1_centos_7_amd64.rpm](https://cdn.jsdelivr.net/gh/XieRuhua/images/安装包/mq/rabbitmq/esl-erlang_23.3.1-1_centos_7_amd64.rpm)                   |
+| Erlang   | esl-erlang_23.3.1-1_centos_7_amd64.rpm  | https://packages.erlang-solutions.com/erlang/rpm/centos/8/x86_64/esl-erlang_23.3.1-1\~centos\~8_amd64.rpm | [gitee仓库：esl-erlang_23.3.1-1_centos_7_amd64.rpm](https://cdn.jsdelivr.net/gh/XieRuhua/images/安装包/mq/rabbitmq/esl-erlang_23.3.1-1_centos_7_amd64.rpm)                   |
 | RabbitMQ | rabbitmq-server-3.9.13-1.el8.noarch.rpm | https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.9.13/rabbitmq-server-3.9.13-1.el8.noarch.rpm | [gitee仓库：rabbitmq-server-3.9.13-1.el8.noarch.rpm](https://cdn.jsdelivr.net/gh/XieRuhua/images/安装包/mq/rabbitmq/rabbitmq-server-3.9.13-1.el8.noarch.rpm)                   |
 
 **<font color="red">注意：RabbitMQ和Erlang的版本一定要对应，否则会出现安装失败的情况</font>**
@@ -163,16 +163,50 @@ RabbitMQ的有些插件没有集成在初始的安装中，它们需要额外安
 官方链接可以找到官方提供的一些插件：[RabbitMQ官方插件地址](http://www.rabbitmq.com/community-plugins.html)
 
 ### 2. 异常情况
+#### 2.1 情况1
 web页面提示  **<font color="red">undefined: There is no template at js/tmpl/layout.ejs undefined</font>**
 <center>
 
 ![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装RabbitMQ/rabbitmq异常1.png)
 </center>
 
-处理方式：
+**处理方式：**
 - 当前网络不佳，切换网络环境
 - 重启服务
     ```shell
     # 重启服务
     systemctl restart rabbitmq-server
     ```
+
+#### 2.2 情况2
+使用上面设置好的账户密码登录。  
+web页面提示  **<font color="red">您与此网站不是私密链接</font>** 。
+
+**处理方式：**
+- 查看用户列表，是否存在登录用户
+  ```bash
+  [root@VM-0-13-centos rabbitmq]# rabbitmqctl list_users
+  Listing users ...
+  user    tags
+  guest   [administrator]
+  ```
+  可以看到刚刚设置的admin账户没有成功。重新执行创建用户的命令并加上权限：
+  ```bash
+  rabbitmqctl add_user admin password
+  rabbitmqctl set_user_tags admin administrator
+  rabbitmqctl set_permissions -p / admin “.*” “.*” “.*”
+  ```
+- 再次查看用户列表
+  ```bash
+  [root@VM-0-13-centos rabbitmq]# rabbitmqctl list_users
+  Listing users ...
+  user    tags
+  guest   [administrator]
+  admin   [administrator]
+  ```
+- 其他情况：登录用户已存在且权限正常，可能是密码错误，尝试修改密码再登录。
+  ```bash
+  rabbitmqctl change_password admin password
+  ```
+
+  
