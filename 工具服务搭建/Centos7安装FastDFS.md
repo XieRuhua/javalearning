@@ -9,6 +9,8 @@
 
 `FastDFS`为互联网量身定制，充分考虑了 **冗余备份** 、 **负载均衡** 、 **线性扩容等机制** ，并注重 **高可用** 、 **高性能** 等指标，使用`FastDFS`很容易搭建一套高性能的文件服务器集群提供文件上传、下载等服务。
 
+**<font color="red">注意：`docker`安装直接看最后</font>**
+
 ## 二、安装前的准备工作
 ```shell
 #安装git
@@ -22,7 +24,6 @@ yum install git
 | FastDFS              | FastDFS本体                    |
 | fastdfs-nginx-module | FastDFS和nginx的关联模块       |
 | nginx                | nginx1.15.4                   |
-
 
 ### 2. 安装编译环境
 ```shell
@@ -71,6 +72,7 @@ cd fastdfs/
 #编译安装
 ./make.sh && ./make.sh install 
 ```
+
 ```shell
 #配置文件准备
 cp /etc/fdfs/tracker.conf.sample /etc/fdfs/tracker.conf
@@ -222,3 +224,71 @@ fdfs_upload_file /etc/fdfs/client.conf /home/1.jpg
     cd /usr/local/nginx/sbin
     ./nginx -s reload
     ```
+
+
+## 七、使用docker搭建FastDFS
+### 1. 镜像下载
+首先下载`FastDFS`文件系统的`docker镜像`
+```bash
+docker search fastdfs
+```
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装FastDFS/FastDFS镜像下载.png)
+</center>
+
+```bash
+docker pull delron/fastdfs
+```
+
+下载完成之后查看：
+```bash
+docker images
+```
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装FastDFS/FastDFS镜像查看.png)
+</center>
+
+### 2. 构建tracker容器和storage容器
+使用`docker镜像`构建`tracker容器`（跟踪服务器，起到调度的作用）：
+```
+docker run -d --network=host --name tracker -v /var/fdfs/tracker:/var/fdfs delron/fastdfs tracker
+```
+> 具体文件挂载目录根据实际情况
+
+使用`docker镜像`构建`storage容器`（存储服务器，提供容量和备份服务）：
+```
+docker run -d --network=host --name storage -e TRACKER_SERVER=ip:22122 -v /var/fdfs/storage:/var/fdfs -e GROUP_NAME=group1 delron/fastdfs storage
+```
+上面需要填写你的`tracker`服务的`ip`地址，端口默认是`22122`。
+
+> 具体文件挂载目录根据实际情况
+
+### 3. 服务配置
+进入`storage`容器，到`storage`的配置文件中配置`http`访问的端口，配置文件在`/etc/fdfs`目录下的`storage.conf`。
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装FastDFS/FastDFS的storage容器配置文件查看1.png)
+</center>
+
+ 默认端口是`8888`，也可以不进行更改。
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装FastDFS/FastDFS的storage容器配置文件查看2.png)
+</center>
+
+### 4. 配置nginx（容器内自带）
+在`/usr/local/nginx`目录下，修改`nginx.conf`文件
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装FastDFS/FastDFS容器内nginx目录.png)
+</center>
+
+默认配置如下：
+<center>
+
+![](https://cdn.jsdelivr.net/gh/XieRuhua/images/JavaLearning/工具服务搭建/Centos7安装FastDFS/FastDFS容器内nginx默认配置.png)
+</center>
+
+此时文件系统以搭建完毕，使用web模块进行文件的上传，将文件上传至`FastDFS`文件系统，此处不详细解释。
