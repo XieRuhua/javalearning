@@ -4,7 +4,6 @@
 [Redis常见命令说明及使用方式](https://www.redis.net.cn/order/)
 ***
 
-
 [文档内容参考1：小林当面试官，面你 Redis ！](https://mp.weixin.qq.com/s/IkV8YKWOxNRZGD8C6U7_aQ)   
 [文档内容参考2：Redis 八股文来袭！](https://mp.weixin.qq.com/s/XFQYvVB5uJSjYrHuJP9sXg)   
 [文档内容参考3：redis知识点总结](https://www.cnblogs.com/syhx/p/9618084.html)   
@@ -12,12 +11,11 @@
 [文档内容参考5：彻底弄懂Redis的内存淘汰策略](https://zhuanlan.zhihu.com/p/105587132)   
 [文档内容参考6：[Redis] 你了解 Redis 的三种集群模式吗？](https://zhuanlan.zhihu.com/p/145186839)   
 
-
 [toc]
 ## 一、Redis是什么
 ### 1. 简介
 `Redis`是一款内存高速缓存数据库。  
-全称为：`Remote Dictionary Server`（远程数据服务），该软件使用`C语言`编写， **`Redis`是一个基于内存的高性能`key-value`数据库统** ，不过与传统`RDBM(关系数据库)`不同，`Redis`属于`NoSQL(非关系型数据库)`，数据是存在`内存`中的，也就是`内存数据库`，所以读写速度非常快，因此被广泛应用于 **`缓存`** 方面。
+全称为：`Remote Dictionary Server`（远程数据服务），该软件使用`C语言`编写， **`Redis`是一个基于内存的高性能`key-value`数据库** ，不过与传统`RDBM(关系数据库)`不同，`Redis`属于`NoSQL(非关系型数据库)`，数据是存在`内存`中的，也就是`内存数据库`，所以读写速度非常快，因此被广泛应用于 **`缓存`** 方面。
 
 `Redis` 提供了多种数据类型（`string`、`list`、`set`、`zset(sorted set)`、`hash`等）来支持不同的业务场景（除了做 **缓存** 之外，也经常用来做 **分布式锁** ，甚至是 **消息队列** ）  
 另外，还支持 **事务** 、 **持久化** 、 **Lua 脚本** 、 **多种集群方案** 等。
@@ -46,7 +44,7 @@
 以设置和获取一个`256字节`字符串为例，它的读取速度可高达`110000次/s`，写速度高达`81000次/s`（是已知综合性能最快的`Key-Value DB`）。
 
 `Redis`跟`memcache`不同的是，储存在`Redis`中的数据是 **持久化** 的，断电或重启后，数据也不会丢失。  
-因为`Redis`的存储分为 **`内存存储`、`磁盘存储`、`log文件`三部分** ，重启后，`Redis`可以从磁盘重新将数据加载到内存中，这些可以通过配置文件对其进行配置；正因为这样，`Redis`才能实现持久化（也可以定期通过异步操作把数据库数据`flush`到硬盘上进行保存）。
+因为`Redis`的存储分为 **`内存存储`、`磁盘存储`、`log文件`三部分** ，重启后，`Redis`可以从磁盘重新将数据加载到内存中，这些可以通过配置文件对其进行配置（持久化及数据恢复见后文 —— 七、数据持久化）；正因为这样，`Redis`才能实现持久化（也可以定期通过异步操作把数据库数据`flush`到硬盘上进行保存）。
 
 `Redis`的出色之处不仅仅是性能，还支持保存多种数据结构，**此外`单个value`的最大限制是`1GB`，不像 `memcached`只能保存`1MB`的数据** ，因此`Redis`可以用来实现很多有用的功能，比如 **用`List`来做`FIFO双向链表`，实现一个轻量级的高性 能消息队列服务；用它的`Set`可以做高性能的`tag系统`等等。**  
 同时`Redis`支持主从模式，可以配置集群，这样更利于支撑起大型的项目，这也是`Redis`的一大亮点。  
@@ -95,12 +93,12 @@
 #### 4.1 应用场景
 对于大多数数据库而言，最为理想的运行方式就是将所有的数据都加载到内存中，而之后的查询操作则可以完全基于内存数据完成。但是，在现实中这样的场景并不多，更多的情况则是只有部分数据可以被加载到内存中。
 
-在`Redis`中，有一个非常重要的概念，**即`keys`一般不会被交换**
-* 如果你的数据库中有 **大量的`keys`，其中每个`key`仅仅关联很小的`value`** ，那么这种场景就不是非常适合使用虚拟内存。
-* 如果恰恰相反，**数据库中只是包含少量的`keys`，而每一个`key`所关联的`value`却非常大**，那么这种场景对于使用虚拟内存就非常合适了。
+在`Redis`中，有一个非常重要的概念，**即`key`一般不会被交换**
+* 如果你的数据库中有 **大量的`key`，其中每个`key`仅仅关联很小的`value`** ，那么这种场景就不是非常适合使用虚拟内存。
+* 如果恰恰相反，**数据库中只是包含少量的`key`，而每一个`key`所关联的`value`却非常大**，那么这种场景对于使用虚拟内存就非常合适了。
 
-在实际的应用中，为了能让虚拟内存更为充分的发挥作用以帮助我们提高系统的运行效率，我们可以将带有很多较小值的`Keys`合并为带有少量较大值的`Keys`。  
-**其中最主要的方法就是将原有的`Key/Value`模式改为基于`Hash`的模式，这样可以让很多原来的`Keys`成为`Hash`中的属性。**
+在实际的应用中，为了能让虚拟内存更为充分的发挥作用以帮助我们提高系统的运行效率，我们可以将带有很多较小值的`Key`合并为带有少量较大值的`Key`。  
+**其中最主要的方法就是将原有的`Key/Value`模式改为基于`Hash`的模式，这样可以让很多原来的`Key`成为`Hash`中的属性。**
 
 #### 4.2 配置Redis虚拟内存
 1. 在配文件 **Redis.conf** 中添加以下配置项，以使当前`Redis`服务器在启动时打开虚拟内存功能（默认关闭的）。
@@ -122,7 +120,7 @@
     vm-max-memory 1000000
     ```
     `Redis`的`key`交换规则是尽量考虑 **"最老"** 的数据（即最长时间没有使用的数据将被持久化）；如果两个对象的`age`相同，那么`value`较大的数据将先被持久化。  
-    需要注意的是：`Redis`不会将`Keys`持久化到磁盘，因此如果仅仅`keys`的数据就已经填满了整个虚拟内存，那么这种数据模型将不适合使用虚拟内存机制，或者是将该值设置的更大，以容纳整个`Keys`的数据。  
+    需要注意的是：`Redis`不会将`Key`持久化到磁盘，因此如果仅仅`key`的数据就已经填满了整个虚拟内存，那么这种数据模型将不适合使用虚拟内存机制，或者是将该值设置的更大，以容纳整个`Key`的数据。  
     **在实际的应用，如果考虑使用`Redis`虚拟内存，我们应尽可能的分配更多的内存交给`Redis`使用，以避免频繁`key交换`的将数据持久化到磁盘上。**
 
 3. 在配置文件中设定页的数量及每一页所占用的字节数。为了将内存中的数据传送到磁盘上，我们需要使用交换文件。  
@@ -174,11 +172,41 @@
 这就是所谓的惰性删除，即当你主动去查过期的`key`时，如果发现`key`过期了，就立即进行删除，不返回任何东西。
 
 #### 1.3 总结
+|          | 内存占用         | CPU占用                       | 特征               |
+| -------- | ---------------- | ----------------------------- | ------------------ |
+| 定时删除 | 节约内存，无占用 | 不分时段占用CPU资源，频度高   | 时间换空间         |
+| 惰性删除 | 内存占用严重     | 延时执行，CPU利用率高         | 空间换时间         |
+| 定期删除 | 内存定期随机清理 | 每秒花费固定的CPU资源维护内存 | 随机抽查，重点抽查 |
+
 **定期删除是集中处理，惰性删除是零散处理。**  
 **<font color="red">`Redis` 过期键采用的是`定期删除 + 惰性删除`二者结合的方式进行删除的。</font>**
 
 ### 2. 内存淘汰策略
+#### 前言(内存限制)
+> `maxmemory`（最大内存容量）
+建议必须设置，否则可能将服务器内存占满，造成服务器宕机  
+```bash
+maxmemory <bytes>
+```
+
+**注意事项：**
+- <font color="red">`maxmemory`的默认值是`0`</font>，也就是不限制内存的使用；生产环境中根据需求设定，通常设置在`50%`以上。
+- `32bit`系统如果使用默认配置或配置为`maxmemory 0`则最大使用`3G`内存。
+- `maxmemory`的值没有最小限制（但是如果低于`1MB`，会打一条`WARNING`日志）。
+- 如果设置了`maxmemory`选项（值 `>= 1）`，Redis在接收命令时总是会判断当前是否已经超出最大内存限制，如果超过限制会根据驱逐策略去释放内存（如果是同步释放且释放内存很大，则会阻塞其他命令的执行）。
+- 单位问题：
+    - **maxmemory 100** 裸数字情况：单位是字节。
+    - **maxmemory 1K**   K：代表`1000字节`。
+    - **maxmemory 1KB** KB：代表`1024字节`。
+    - **maxmemory 1M**   M：代表`1000000字节`。
+    - **maxmemory 1MB** MB: 代表`1048576字节`。
+    - **maxmemory 1G**   G：代表`1000000000字节`。
+    - **maxmemory 1GB**  GB: 代表`1073741824字节`。
+
+设置`Redis`可以使用的内存量。一旦到达内存使用上限，`Redis`将会试图移除内部数据，移除规则可以通过`maxmemory-policy`来指定。
+
 #### 2.1 简述
+
 **为什么需要淘汰策略？**  
 如果过期键没有被访问（无法触发惰性删除），而周期性删除又跟不上新键产生的速度，内存会被慢慢耗尽；
 定期删除还是惰性删除都不是一种完全精准的删除，就还是会存在key没有被删除掉的场景，所以就需要内存淘汰策略进行补充。
@@ -188,11 +216,11 @@
 * **no-eviction：** 当内存使用超过配置的时候会返回错误，不会驱逐任何键
 * **allkeys-lru：** 加入键的时候，如果过限，首先通过`LRU算法`驱逐最久没有使用的键
 * **volatile-lru：** 加入键的时候如果过限，首先从设置了过期时间的键集合中驱逐最久没有使用的键
-* **allkeys-random：** 加入键的时候如果过限，从所有key随机删除
+* **allkeys-random：** 加入键的时候如果过限，从所有键随机删除
 * **volatile-random：** 加入键的时候如果过限，从过期键的集合中随机驱逐
 * **volatile-ttl：** 从配置了过期时间的键中驱逐马上就要过期的键
-* **volatile-lfu：** `4.0+`新增配置， 从所有配置了过期时间的键中驱逐使用频率最少的键（对有过期时间的key采用 **`LFU淘汰算法`** ）
-* **allkeys-lfu：** `4.0+`新增配置，从所有键中驱逐使用频率最少的键（对全部`key`采用 **`LFU淘汰算法`** ）
+* **volatile-lfu：** `4.0+`新增配置， 从所有配置了过期时间的键中驱逐使用频率最少的键（对有过期时间的键采用 **`LFU淘汰算法`** ）
+* **allkeys-lfu：** `4.0+`新增配置，从所有键中驱逐使用频率最少的键（对全部键采用 **`LFU淘汰算法`** ）
 
 #### 2.2 LRU（Least Recently Used 最近最少使用）算法
 ##### 2.2.1 标准实现
@@ -288,7 +316,7 @@ unsigned long LFUDecrAndReturn(robj *o) {
     **剩下的`16位`另作它用：用于`计数值`的衰减。** 上面说的Redis配置项 **`server.lfu_decay_time`** ，也是用于控制计数的衰减的，计数衰减的周期长度，单位是分钟。**当时间过去一个周期，计数值就会`减1`。**  
     衰减时间默认是`1`，它是计数器应该衰减的分钟数，长时间不读取`key`的话，是需要进行衰减的，当每次采样发现时计数器的时间比这个值要大。有一个特殊的值 ，`0` 表示每次扫描时计数器总是衰减，很少用到。
 
-**计数器对数因子改变了需要多少次命中才能使频率计数器饱和，而频率计数器刚好在 0-255 范围内。因子越大，为了达到最大，需要的访问次数越多。因子越低，低访问的计数器分辨率越好**
+**计数器对数因子改变了需要多少次命中才能使频率计数器饱和，而频率计数器刚好在 0-255 范围内。因子越大，为了达到最大，需要的访问次数越多。因子越低，低访问的计数器分辨率越好。**
 
 ## 四、数据类型及其应用场景
 [官网文档：Redis数据类型](https://redis.io/docs/manual/data-types/)  
@@ -301,20 +329,20 @@ unsigned long LFUDecrAndReturn(robj *o) {
 </center>
 
 ### 1. string
-#### 介绍：
+#### 1.1 介绍：
 `string` 数据结构是简单的 `key-value` 类型。虽然 `Redis` 是用 `C 语言`写的，但是 `Redis` 并没有使用 `C` 的字符串表示，而是自己构建了一种 **简单动态字符串（`simple dynamic string，SDS`）**。
 
 **<font color="red">`Redis`的字符串如果保存的对象是整数类型，那么就用`int`存储。如果不能用整数表示，就用`SDS`来表示； `SDS`通过记录长度，和`预分配空间`，可以高效计算长度，进行`append`操作（动态增加，类比`java`里面的`StringBuffer`的`append`方法）。</font>**
 
 相比于 `C` 的原生字符串，`Redis` 的 `SDS` 不光可以保存文本数据还可以保存二进制数据，并且获取字符串长度复杂度为 `O(1)`（C 字符串为` O(N)`），**除此之外，`Redis` 的 `SDS API` 是安全的，不会造成`缓冲区溢出`。**
 
-#### 常用命令：
+#### 1.2 常用命令：
 `set`，`get`，`strlen`，`exists`，`decr`，`incr`，`setex` 等等。
 
-#### 应用场景： 
+#### 1.3 应用场景：
 一般常用在需要计数的场景，比如用户的访问次数、热点文章的点赞转发数量、常用热点数据（`json`串或其他形式存储）等等。
 
-#### 常用操作
+#### 1.4 常用操作：
 ##### (1) 普通字符串的基本操作：
 ```java
 127.0.0.1:6379> set key value #设置 key-value 类型的值
@@ -331,7 +359,7 @@ OK
 null                        
 ```
 
-##### (2) 批量设值 :
+##### (2) 批量设值与取值：
 ```java
 127.0.0.1:6379> mset key1 value1 key2 value2  # 批量设置 key-value 类型的值
 OK
@@ -367,19 +395,19 @@ OK
 ```
 
 ### 2. list
-#### 介绍：
-**`list` 即是 链表。**  
-链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整链表长度，但是链表的随机访问困难。  
-**许多高级编程语言都内置了链表的实现比如 `Java` 中的 `LinkedList`，但是 `C 语言`并没有实现链表，所以 `Redis` 实现了自己的链表数据结构。**  
+#### 2.1 介绍：
+**`list` 即链表。**  
+链表是一种非常常见的数据结构，特点是易于数据元素的插入和删除并且可以灵活调整长度，但是链表的随机访问困难。  
+**许多高级编程语言都内置了链表的实现，比如 `Java` 中的 `LinkedList`。由于`C 语言`并没有实现链表，所以 `Redis` 实现了自己的链表数据结构。**  
 `Redis` 的 `list` 的实现为一个 <font color="red">双向链表</font>，即可以支持反向查找和遍历，更方便操作，不过带来了部分额外的 **内存开销** 。
 
-#### 常用命令：
+#### 2.2 常用命令：
 `rpush`，`rpop`，`lpop`，`lpush`，`lrange`，`llen` 等。
 
-#### 应用场景： 
-`发布`与`订阅`或者说`消息队列`、`慢查询处理`。
+#### 2.3 应用场景：
+消息的`发布`与`订阅`或者`消息队列`、`慢查询处理`。
 
-#### 常用操作
+#### 2.4 常用操作：
 `rpush`，`rpop`，`lpop`，`lpush`的操作图解
 <center>
 
@@ -413,17 +441,17 @@ OK
 **但是`Redis`并不适合做消息队列。因为`Redis`本身没有支持`AMQP(Advanced Message Queuing Protocol)`协议[AMQP协议详解](https://www.zhihu.com/topic/20138354/top-answers)，消息队列该有的能力不足，消息`可靠性`不强。**
 
 ### 3. hash
-#### 介绍：
+#### 3.1 介绍：
 **`hash` 类似于 `JDK1.8前`的 `HashMap`，内部实现也差不多(`数组` + `链表`)。**  
 **`Redis`的`hash`（`dict`+`字典`） 是一个 `string` 类型的`dictht`（键：等同于`HashMap`的`数组`） 和 `dictEntry`（值：存储键值对。等同于`HashMap`的`链表`）的映射表** ，特别适合用于存储对象，后续操作的时候，你可以直接仅仅修改这个对象中的某个字段的值。比如可以 `hash` 数据结构来存储用户信息、商品信息等等。
 
-#### 常用命令：
+#### 3.2 常用命令：
 `hset`，`hmset`，`hexists`，`hget`，`hgetall`，`hkeys`，`hvals` 等。
 
-#### 应用场景： 
+#### 3.3 应用场景：
 系统中对象数据的存储。
 
-#### 常用操作
+#### 3.4 常用操作：
 ```java
 127.0.0.1:6379> hmset userInfoKey name "admin" desc "dev" age "100"
 "OK"
@@ -453,7 +481,7 @@ OK
 127.0.0.1:6379> hget userInfoKey name
 "zhangsan"
 ```
-#### hash的扩容和收缩机制
+#### 3.5 hash的扩容和收缩机制
 在 `Java` 中 `HashMap` 扩容是个很耗时的操作，需要去申请新的数组，为了追求高性能，**而`Redis` 采用了<font color="red">渐进式 `rehash`</font> 策略** ，`rehash`操作的时候，`rehash`动作是分多次，渐进式的完成的，将`rehash键值对`所需要的计算工作均摊到字典的每个添加、删除、查找和更新操作上，从而避免了集中式`rehash`而带来的庞大计算量。
 
 **<font color="red">这也是 `Redis hash` 中最重要的部分。</font>**
@@ -468,7 +496,7 @@ OK
 **收缩**
 * 当哈希表的`负载因子`小于`0.1`时，`Redis`会自动开始对哈希表进行缩容操作。
 
-**其中哈希表的`负载因子`可以通过公式：<font color="red">`负载因子 = 哈希表已保存节点数量了 / 哈希表大小`（`load_factor = ht[0].used / ht[0].size`）</font>**  
+**其中哈希表的`负载因子`可以通过公式：<font color="red">`负载因子 = 哈希表已保存节点数量 / 哈希表大小`（`load_factor = ht[0].used / ht[0].size`）</font>**  
 如：对于一个大小为`4`，包含`4个键值对`的哈希表来说，这个哈希表的负载因子为： **`load_factor - 4 /4 =1`**
 
 ##### (2) 扩容/收缩原理（过程）
@@ -493,7 +521,7 @@ OK
 * **删除和更新：** 其实本质是先找到位置，再进行操作，所以和读请求一样，先找`ht[0]`，不存在的时候再找`ht[1]`，找到之后再进行删改操作。
 
 ### 4. set
-#### 介绍：
+#### 4.1 介绍：
 **`set` 类似于 `Java` 中的 `HashSet` 。**  
 `Redis` 中的 `set` 类型是一种**无序集合**，集合中的元素没有先后顺序。当你需要存储一个列表数据，又不希望出现重复数据时，`set` 是一个很好的选择，并且 `set` 提供了判断某个成员是否在一个 `set` 集合内的重要接口，这个也是 `list` 所不能提供的。  
 
@@ -501,13 +529,13 @@ OK
 比如：你可以将一个用户所有的关注人存在一个集合中，将其所有粉丝存在一个集合。`Redis` 可以非常方便的实现如共同关注、共同粉丝、共同喜好等功能。  
 这个过程也就是求交集的过程。**
 
-#### 常用命令：
+#### 4.2 常用命令：
 `sadd`，`spop`，`smembers`，`sismember`，`scard`，`sinterstore`，`sunion`，`sdiff`等。
 
-#### 应用场景： 
+#### 4.3 应用场景：
 需要存放的数据不能重复；需要获取多个数据源交集或并集等场景。
 
-#### 常用操作
+#### 4.4 常用操作：
 ```java
 127.0.0.1:6379> sadd mySet value1 value2    # 添加元素进去
 "2"
@@ -537,18 +565,18 @@ OK
 ```
 
 ### 5. Zset（sorted set）
-#### 介绍：
+#### 5.1 介绍：
 和 `set` 相比，`sorted set` 增加了一个权重参数 **`score`** ，使得集合中的元素能够 **按 `score` 进行有序排列，还可以通过 `score` 的范围来获取元素的列表。**
 
 **有点像是 `Java` 中 `HashMap` 和 `TreeSet` 的结合体。**
 
-#### 常用命令：
+#### 5.2 常用命令：
 `zadd`，`zcard`，`zscore`，`zrange`，`zrevrange`，`zrem`等。
 
-#### 应用场景： 
+#### 5.3 应用场景：
 需要对数据根据某个权重进行排序的场景。比如推荐商品的排序展示等场景。
 
-#### 常用操作
+#### 5.4 常用操作：
 ```java
 127.0.0.1:6379> zadd myZset 3.0 value1          # 添加元素到 sorted set 中 3.0 为权重
 "1"
@@ -569,7 +597,7 @@ OK
 1) "value1"
 2) "value2"
 ```
-#### Zset实现（ziplist 、 字典 + 跳表(skiplist)）
+#### 5.5 Zset实现（ziplist 、 字典 + 跳表(skiplist)）
 `zset`对象的存储方式有两种，分别是`ziplist`和`字典+跳表(skiplist)`。
 
 ##### (1) ziplist
@@ -620,18 +648,18 @@ OK
 在5中基础的数据类型的基础上，还有5中特殊的数据类型，分别是：**bitmap，hyperLogLog，bloomFilter，GeoHash，Stream**
 
 #### 7.1 bitmap
-##### 介绍：
+##### 7.1.1 介绍：
 **`bitmap` 存储的是连续的二进制数字（`0` 和 `1`）**，通过 `bitmap`, 只需要一个 **`bit`** 位来表示某个元素对应的值或者状态，`key` 就是对应元素本身 。
 
 我们知道 `8 个 bit` 可以组成一个 `byte`，所以 `bitmap` 本身会极大的节省储存空间。
 
-##### 常用命令：
+##### 7.1.2 常用命令：
 `setbit`，`getbit`，`bitcount`，`bitop`等。
 
-##### 应用场景： 
+##### 7.1.3 应用场景：
 适合需要保存状态信息（比如是否签到、是否登录...）并需要进一步对这些信息进行分析的场景。比如用户签到情况、活跃用户情况、用户行为统计（比如是否点赞过某个视频）。
 
-##### 常用操作
+##### 7.1.4 常用操作：
 ```java
 127.0.0.1:6379> setbit mykey 7 1
 "0"
@@ -652,26 +680,26 @@ OK
 ### 8. 其他应用场景及实现
 Redis主要应用场景为：热点数据缓存、定时操作、分布式锁、秒杀、限流等
 
-#### 热点数据的缓存
+#### 1）热点数据的缓存
 由于Redis访问速度块、支持的数据类型比较丰富，所以Redis很适合用来存储热点数据；另外结合`expire`，我们可以设置过期时间然后再进行缓存更新操作，这个功能最为常见，我们几乎所有的项目都有所运用。  
 如：用户的登录信息（token），App首页加载的不需要要实时更新的数据
 
-#### 限时业务的运用
+#### 2）限时业务的运用
 Redis中可以使用`expire`命令设置一个键的生存时间，到时间后Redis会删除它。利用这一特性可以运用在限时的优惠活动信息、手机验证码等业务场景。
 
-#### 计数器相关问题
+#### 3）计数器相关问题
 Redis由于 **`string`** 类型的 **`incrby`** 命令可以实现 **原子性的递增** ，所以可以运用于高并发的秒杀活动、分布式序列号的生成。  
 具体业务还体现在比如限制一个手机号发多少条短信、一个接口一分钟限制多少请求、一个接口一天限制调用多少次等。
 
-#### 排行榜相关问题
+#### 4）排行榜相关问题
 关系型数据库在排行榜方面查询速度普遍偏慢，所以可以借助Redis的 **SortedSet** 进行热点数据的排序（同时还可以排行分页等）。
 
-#### 分布式锁
+#### 5）分布式锁
 这个主要利用Redis的 **`setnx`** 命令进行，<font color="red">**`setnx："set if not exists"`**</font> 就是如果不存在则成功设置缓存同时返回`1`，否则返回`0`。  
 当服务器是集群时，定时任务可能在两台机器上都会运行，所以在定时任务中首先 通过`setnx`设置一个`lock`，如果成功设置则执行，如果没有成功设置，则表明该定时任务已执行。  
 这个特性也可以运用于其他需要分布式锁的场景中， **结合过期时间主要是防止死锁的出现** 。
 
-#### 延时操作（订单支付过期等场景）
+#### 6）延时操作（订单支付过期等场景）
 可以利用 **`ZSet`** 。我们可以把任务的描述序列化成字符串，放在 `ZSet` 的 `value` 中，然后把任务的执行时间戳作为 `score`，利用 `ZSet` 天然的排序特性，执行时刻越早的会排在越前面。
 
 开一个或多个定时线程，每隔一段时间去查一下这个 `ZSet` 中 `score` 小于或等于当前时间戳的元素(通过 **`zrangebyscore`** 命令实现)，然后再执行元素对应的任务即可。**当然，执行完任务后，还要将元素从 `ZSet` 中删除，避免任务重复执行。**
@@ -680,19 +708,19 @@ Redis由于 **`string`** 类型的 **`incrby`** 命令可以实现 **原子性�
 
 **当然我们也可以利用`rabbitmq`、`activemq`等消息中间件的延迟队列服务实现该需求。**
 
-#### 分页查询
+#### 7）分页查询
 Redis的 **`Zset(sorted set)`** 集合中提供了一个 **`zrange`（顺序）、`zrevrange`（逆序）** 方法，语法如下：
 ```java
 zrange key min max 
 ```
 **返回`key`对应的`set`中`[min,max]`的数据，当`min=0，max=-1`时即返回所有**
 
-#### 队列/栈
+#### 8）队列/栈
 由于Redis有`list push`和`list pop`这样的命令，所以能够很方便的执行队列和栈的操作。
 * 通过 `rpush/lpop` 实现队列
 * 通过 `rpush/rpop` （或`lpush/lpop`）实现栈（先进后出，后进先出）：
 
-#### 消息的发布/订阅
+#### 9）消息的发布/订阅
 **命令：**
 * `psubscribe pattern [pattern ...]`：订阅一个或多个符合给定模式的频道。
 * `pubsb subcommand [argument [argument ...]]`：查看订阅与发布系统状态。
@@ -747,9 +775,8 @@ Reading messages... (press Ctrl-C to quit)
 
 **`Redis发布订阅`与`ActiveMQ`的比较**
 * `ActiveMQ`支持多种消息协议，包括 **`AMQP`、`MQTT`、`Stomp`** 等，并且支持JMS规范，<font color="red">但Redis没有提供对这些协议的支持</font>；
-* `ActiveMQ`提供持久化功能，但<font color="red">Redis无法对 **消息** 持久化存储</font>，一旦消息被发送，不管有没有订阅者接收，那么消息就会丢失；
+* `ActiveMQ`提供持久化功能，但 **<font color="red">Redis无法对消息持久化存储</font>**，一旦消息被发送，不管有没有订阅者接收，那么消息就会丢失；
 * `ActiveMQ`提供了消息传输保障，当客户端连接超时或事务回滚等情况发生时，消息会被重新发送给客户端，<font color="red">Redis没有提供消息传输保障</font>。 
-
 
 ## 五、事务
 [Redis 官网相关介绍](https://redis.io/topics/transactions)
@@ -863,8 +890,416 @@ appendfsync no        #关闭时刷入：让操作系统决定何时进行同步
 * 对于同一份数据来说，`AOF日志文件`通常比`RDB数据快照文件`更大
 * `AOF`开启后，支持的写`QPS`会比`RDB`支持的写`QPS` **低** ，因为`AOF`一般会配置成每秒`fsync`一次日志文件，当然，每秒一次`fsync`，性能也还是很高的。
 
-### 3. 总结
-#### 3.1 save 、bgsave和bgrewriteaof执行区别和注意事项
+### 3. Redis 数据恢复过程
+如果需要恢复数据，只需将备份文件 (`RDB`或`AOF`) 移动到 `Redis` 安装目录并启动服务即可（`Redis`重启后自动完成）。
+
+`Redis`的数据载入主要是指`Redis`重启时候恢复数据的过程，恢复的数据总共有两种：
+- **AOF 数据文件**
+- **RDB 数据文件**
+
+数据恢复的过程是二选一的过程，也就是如果开启`AOF持久化`那么就会使用`AOF文件`进行恢复，如果没有才会选择`RDB文件`进行恢复。
+
+选择过程源码如下：
+```c
+void loadDataFromDisk(void) {
+    // 记录开始时间
+    long long start = ustime();
+ 
+    // AOF 持久化已打开？
+    if (server.aof_state == REDIS_AOF_ON) {
+        // 尝试载入 AOF 文件
+        if (loadAppendOnlyFile(server.aof_filename) == REDIS_OK)
+            // 打印载入信息，并计算载入耗时长度
+            redisLog(REDIS_NOTICE,"DB loaded from append only file: %.3f seconds",(float)(ustime()-start)/1000000);
+    // AOF 持久化未打开
+    } else {
+        // 尝试载入 RDB 文件
+        if (rdbLoad(server.rdb_filename) == REDIS_OK) {
+            // 打印载入信息，并计算载入耗时长度
+            redisLog(REDIS_NOTICE,"DB loaded from disk: %.3f seconds",
+                (float)(ustime()-start)/1000000);
+        } else if (errno != ENOENT) {
+            redisLog(REDIS_WARNING,"Fatal error loading the DB: %s. Exiting.",strerror(errno));
+            exit(1);
+        }
+    }
+}
+```
+
+#### 3.1 Redis AOF数据恢复过程
+整个`AOF文件`载入的过程整体步骤如下：
+- 打开`AOF文件`开始循环读取；
+- 根据`AOF`写入的命令解析`Redis 命令行`；
+- 通过 **伪命令行客户端** 执行解析的`命令行`；
+- Redis接收到 **伪客户端** 发送的命令行以后找到命令对应的函数负责执行数据写入。
+
+`AOF`保存的命令行格式类似`"*3\r\n$3\r\nSET\r\n$5\r\nmykey\r\n$7\r\nmyvalue\r\n"`， 所以解析到 **`*字符`** 就知道是一个命令的开始，然后就知道命令涉及的参数个数，每个参数都以 **`$字符`** 开始标记字符串长度，知道字符串长度就可以解析出命令字符串了。
+
+`AOF`数据恢复过程源码：
+```c
+int loadAppendOnlyFile(char *filename) {
+
+    // 为客户端
+    struct redisClient *fakeClient;
+
+    // 打开 AOF 文件
+    FILE *fp = fopen(filename,"r");
+
+    struct redis_stat sb;
+    int old_aof_state = server.aof_state;
+    long loops = 0;
+
+    // 检查文件的正确性
+    if (fp && redis_fstat(fileno(fp),&sb) != -1 && sb.st_size == 0) {
+        server.aof_current_size = 0;
+        fclose(fp);
+        return REDIS_ERR;
+    }
+
+    // 检查文件是否正常打开
+    if (fp == NULL) {
+        redisLog(REDIS_WARNING,"Fatal error: can't open the append log file for reading: %s",strerror(errno));
+        exit(1);
+    }
+
+    /**
+     * 暂时性地关闭 AOF ，防止在执行 MULTI 时，
+     * EXEC 命令被传播到正在打开的 AOF 文件中。
+     */
+    server.aof_state = REDIS_AOF_OFF;
+
+    fakeClient = createFakeClient();
+
+    // 设置服务器的状态为：正在载入
+    // startLoading 定义于 rdb.c
+    startLoading(fp);
+
+    while(1) {
+        int argc, j;
+        unsigned long len;
+        robj **argv;
+        char buf[128];
+        sds argsds;
+        struct redisCommand *cmd;
+
+        /* 
+         * 间隔性地处理客户端发送来的请求
+         * 因为服务器正处于载入状态，所以能正常执行的只有 PUBSUB 等模块
+         */
+        if (!(loops++ % 1000)) {
+            loadingProgress(ftello(fp));
+            processEventsWhileBlocked();
+        }
+
+        // 读入文件内容到缓存
+        if (fgets(buf,sizeof(buf),fp) == NULL) {
+            if (feof(fp))
+                // 文件已经读完，跳出
+                break;
+            else
+                goto readerr;
+        }
+
+        // 确认协议格式，比如 *3\r\n
+        if (buf[0] != '*') goto fmterr;
+
+        // 取出命令参数，比如 *3\r\n 中的 3
+        argc = atoi(buf+1);
+
+        // 至少要有一个参数（被调用的命令）
+        if (argc < 1) goto fmterr;
+
+        // 从文本中创建字符串对象：包括命令，以及命令参数
+        // 例如 $3\r\nSET\r\n$3\r\nKEY\r\n$5\r\nVALUE\r\n
+        // 将创建三个包含以下内容的字符串对象：
+        // SET 、 KEY 、 VALUE
+        argv = zmalloc(sizeof(robj*)*argc);
+        for (j = 0; j < argc; j++) {
+            if (fgets(buf,sizeof(buf),fp) == NULL) goto readerr;
+
+            if (buf[0] != '$') goto fmterr;
+
+            // 读取参数值的长度
+            len = strtol(buf+1,NULL,10);
+            // 读取参数值
+            argsds = sdsnewlen(NULL,len);
+            if (len && fread(argsds,len,1,fp) == 0) goto fmterr;
+            // 为参数创建对象
+            argv[j] = createObject(REDIS_STRING,argsds);
+
+            if (fread(buf,2,1,fp) == 0) goto fmterr; /* discard CRLF */
+        }
+
+        /* Command lookup 
+         *
+         * 查找命令
+         */
+        cmd = lookupCommand(argv[0]->ptr);
+        if (!cmd) {
+            redisLog(REDIS_WARNING,"Unknown command '%s' reading the append only file", (char*)argv[0]->ptr);
+            exit(1);
+        }
+
+        /* 
+         * 调用伪客户端，执行命令
+         */
+        fakeClient->argc = argc;
+        fakeClient->argv = argv;
+        cmd->proc(fakeClient);
+
+        /* The fake client should not have a reply */
+        redisAssert(fakeClient->bufpos == 0 && listLength(fakeClient->reply) == 0);
+        /* The fake client should never get blocked */
+        redisAssert((fakeClient->flags & REDIS_BLOCKED) == 0);
+
+        /*
+         * 清理命令和命令参数对象
+         */
+        for (j = 0; j < fakeClient->argc; j++)
+            decrRefCount(fakeClient->argv[j]);
+        zfree(fakeClient->argv);
+    }
+
+    /* 
+     * 如果能执行到这里，说明 AOF 文件的全部内容都可以正确地读取，
+     * 但是，还要检查 AOF 是否包含未正确结束的事务
+     */
+    if (fakeClient->flags & REDIS_MULTI) goto readerr;
+
+    // 关闭 AOF 文件
+    fclose(fp);
+    // 释放伪客户端
+    freeFakeClient(fakeClient);
+    // 复原 AOF 状态
+    server.aof_state = old_aof_state;
+    // 停止载入
+    stopLoading();
+    // 更新服务器状态中， AOF 文件的当前大小
+    aofUpdateCurrentSize();
+    // 记录前一次重写时的大小
+    server.aof_rewrite_base_size = server.aof_current_size;
+
+    return REDIS_OK;
+
+// 读入错误
+readerr:
+    // 非预期的末尾，可能是 AOF 文件在写入的中途遭遇了停机
+    if (feof(fp)) {
+        redisLog(REDIS_WARNING,"Unexpected end of file reading the append only file");
+
+        // 文件内容出错
+    } else {
+        redisLog(REDIS_WARNING,"Unrecoverable error reading the append only file: %s", strerror(errno));
+    }
+    exit(1);
+
+// 内容格式错误
+fmterr:
+    redisLog(REDIS_WARNING");
+    exit(1);
+}
+```
+
+#### 3.2 Redis RDB数据恢复过程
+整个`RDB文件`载入的过程和`AOF`有些许差别：
+1. `RDB文件`的数据恢复直接写入内存而 **<font color="red">不是</font>通过伪装命令行执行命令生成的** ；
+2. `RDB文件`的读取过程和`AOF`不一样，`RDB文件`存储按照`type+key+value`的格式存储所以读取也是这样读取的。
+
+整体恢复步骤如下：
+- 打开`RDB文件`开始恢复数据；
+- 读取`type`用于判断读取`value`的格式；
+- 读取`key`且`key`的第一个字节标明了`key`的 **长度** 所以可以读取准确长度的`key`；
+- 读取`value`对象，读取过程根据`type`进行读取以及恢复。
+
+`RDB`数据恢复过程源码：
+```c
+/*
+ * 将给定 rdb 中保存的数据载入到数据库中。
+ */
+int rdbLoad(char *filename) {
+    uint32_t dbid;
+    int type, rdbver;
+    redisDb *db = server.db+0;
+    char buf[1024];
+    long long expiretime, now = mstime();
+    FILE *fp;
+    rio rdb;
+ 
+    // 打开 rdb 文件
+    if ((fp = fopen(filename,"r")) == NULL) return REDIS_ERR;
+ 
+    // 初始化写入流
+    rioInitWithFile(&rdb,fp);
+    rdb.update_cksum = rdbLoadProgressCallback;
+    rdb.max_processing_chunk = server.loading_process_events_interval_bytes;
+    if (rioRead(&rdb,buf,9) == 0) goto eoferr;
+    buf[9] = '\0';
+ 
+    // 检查版本号
+    if (memcmp(buf,"REDIS",5) != 0) {
+        fclose(fp);
+        redisLog(REDIS_WARNING,"Wrong signature trying to load DB from file");
+        errno = EINVAL;
+        return REDIS_ERR;
+    }
+    rdbver = atoi(buf+5);
+    if (rdbver < 1 || rdbver > REDIS_RDB_VERSION) {
+        fclose(fp);
+        redisLog(REDIS_WARNING,"Can't handle RDB format version %d",rdbver);
+        errno = EINVAL;
+        return REDIS_ERR;
+    }
+ 
+    // 将服务器状态调整到开始载入状态
+    startLoading(fp);
+    while(1) {
+        robj *key, *val;
+        expiretime = -1;
+ 
+        /* Read type. 
+         *
+         * 读入类型指示，决定该如何读入之后跟着的数据。
+         *
+         * 这个指示可以是 rdb.h 中定义的所有以REDIS_RDB_TYPE_* 为前缀的常量的其中一个
+         * 或者所有以 REDIS_RDB_OPCODE_* 为前缀的常量的其中一个
+         */
+        if ((type = rdbLoadType(&rdb)) == -1) goto eoferr;
+ 
+        // 读入过期时间值
+        if (type == REDIS_RDB_OPCODE_EXPIRETIME) {
+ 
+            // 以秒计算的过期时间
+ 
+            if ((expiretime = rdbLoadTime(&rdb)) == -1) goto eoferr;
+ 
+            /* We read the time so we need to read the object type again. 
+             *
+             * 在过期时间之后会跟着一个键值对，我们要读入这个键值对的类型
+             */
+            if ((type = rdbLoadType(&rdb)) == -1) goto eoferr;
+ 
+            /* the EXPIRETIME opcode specifies time in seconds, so convert
+             * into milliseconds. 
+             *
+             * 将格式转换为毫秒*/
+            expiretime *= 1000;
+        } else if (type == REDIS_RDB_OPCODE_EXPIRETIME_MS) {
+ 
+            // 以毫秒计算的过期时间
+ 
+            /* Milliseconds precision expire times introduced with RDB
+             * version 3. */
+            if ((expiretime = rdbLoadMillisecondTime(&rdb)) == -1) goto eoferr;
+ 
+            /* We read the time so we need to read the object type again.
+             *
+             * 在过期时间之后会跟着一个键值对，我们要读入这个键值对的类型
+             */
+            if ((type = rdbLoadType(&rdb)) == -1) goto eoferr;
+        }
+            
+        // 读入数据 EOF （不是 rdb 文件的 EOF）
+        if (type == REDIS_RDB_OPCODE_EOF)
+            break;
+ 
+        /* 
+         * 读入切换数据库指示
+         */
+        if (type == REDIS_RDB_OPCODE_SELECTDB) {
+ 
+            // 读入数据库号码
+            if ((dbid = rdbLoadLen(&rdb,NULL)) == REDIS_RDB_LENERR)
+                goto eoferr;
+ 
+            // 检查数据库号码的正确性
+            if (dbid >= (unsigned)server.dbnum) {
+                redisLog(REDIS_WARNING,"FATAL: ", server.dbnum);
+                exit(1);
+            }
+ 
+            // 在程序内容切换数据库
+            db = server.db+dbid;
+ 
+            // 跳过
+            continue;
+        }
+ 
+        /* Read key 
+         *
+         * 读入键
+         */
+        if ((key = rdbLoadStringObject(&rdb)) == NULL) goto eoferr;
+ 
+        /* Read value 
+         *
+         * 读入值
+         */
+        if ((val = rdbLoadObject(type,&rdb)) == NULL) goto eoferr;
+ 
+        /* 
+         *
+         * 如果服务器为主节点的话，
+         * 那么在键已经过期的时候，不再将它们关联到数据库中去
+         */
+        if (server.masterhost == NULL && expiretime != -1 && expiretime < now) {
+            decrRefCount(key);
+            decrRefCount(val);
+            // 跳过
+            continue;
+        }
+ 
+        /* Add the new object in the hash table 
+         *
+         * 将键值对关联到数据库中
+         */
+        dbAdd(db,key,val);
+ 
+        /* Set the expire time if needed 
+         *
+         * 设置过期时间
+         */
+        if (expiretime != -1) setExpire(db,key,expiretime);
+ 
+        decrRefCount(key);
+    }
+ 
+    /* Verify the checksum if RDB version is >= 5 
+     *
+     * 如果 RDB 版本 >= 5 ，那么比对校验和
+     */
+    if (rdbver >= 5 && server.rdb_checksum) {
+        uint64_t cksum, expected = rdb.cksum;
+ 
+        // 读入文件的校验和
+        if (rioRead(&rdb,&cksum,8) == 0) goto eoferr;
+        memrev64ifbe(&cksum);
+ 
+        // 比对校验和
+        if (cksum == 0) {
+            redisLog(REDIS_WARNING,"RDB file was saved with checksum disabled: no check performed.");
+        } else if (cksum != expected) {
+            redisLog(REDIS_WARNING,"Wrong RDB checksum. Aborting now.");
+            exit(1);
+        }
+    }
+ 
+    // 关闭 RDB 
+    fclose(fp);
+ 
+    // 服务器从载入状态中退出
+    stopLoading();
+ 
+    return REDIS_OK;
+ 
+eoferr: /* unexpected end of file is handled here with a fatal exit */
+    redisLog(REDIS_WARNING,"Short read or OOM loading DB. Unrecoverable error, aborting now.");
+    exit(1);
+    return REDIS_ERR; /* Just to avoid warning */
+}
+```
+
+### 4. 总结
+#### 4.1 save 、bgsave和bgrewriteaof执行区别和注意事项
 * `save` 会将整个Redis数据库数据保存到 **`RDB文件`** ，并在保存完成之前 **阻塞** 其他调用者。
 * `save` 命令直接调用 **`save`** ，阻塞 Redis 主进程；`bgsave` 用**子进程**调用 `rdbSave` ，主进程仍可继续处理命令请求。
 * `save` 执行期间， **`AOF`** 写入可以在后台线程进行， **`bgrewriteaof`** 可以在子进程进行，所以这三种操作可以同时进行。
@@ -873,7 +1308,7 @@ appendfsync no        #关闭时刷入：让操作系统决定何时进行同步
 * 调用 **`rdbLoad`** 函数载入 **`RDB文件`** 时（数据恢复），不能进行任何和数据库相关的操作；  
 不过`订阅与发布`方面的命令可以正常执行，因为它们和数据库不相关联。`发布与订阅`功能和其他数据库功能是完全隔离的，前者不写入也不读取数据库，所以在服务器载入期间，`订阅与发布`功能仍然可以正常使用，而不必担心对载入数据的完整性产生影响。
 
-#### 3.2 （补充）RDB 和 AOF 的混合持久化
+#### 4.2 （补充）RDB 和 AOF 的混合持久化
 `Redis 4.0` 开始支持 `RDB` 和 `AOF` 的混合持久化（默认关闭，可以通过配置项`aof-use-rdb-preamble`开启）。
 
 如果把混合持久化打开，`AOF` 重写的时候就直接把 `RDB` 的内容写到 `AOF文件`开头。**这样做的好处是可以结合 `RDB` 和 `AOF` 的优点, 快速加载同时避免丢失过多的数据。当然缺点也是有的， `AOF` 里面的 `RDB` 部分是压缩格式不再是 `AOF` 格式，可读性较差**。
@@ -910,7 +1345,7 @@ appendfsync no        #关闭时刷入：让操作系统决定何时进行同步
 #### 2.2 哨兵模式：
 > 配置过程省略....
 
-##### 2.2.1 Redis-sentinel简介 
+##### 2.2.1 Redis-sentinel简介
 `Redis` 的 `Sentinel` 系统用于管理多个 `Redis` 服务器（`instance`），为 `Redis`提供了高可用性。使用哨兵模式创建一个可以不用人为干预而应对各种故障的 `Redis` 部署。
 
 **该系统执行以下三个任务：**
