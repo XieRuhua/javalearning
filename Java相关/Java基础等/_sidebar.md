@@ -4,6 +4,7 @@
 #### [8种基本类型的包装类和常量池以及拆装箱](./Java相关\Java基础等/8种基本类型的包装类和常量池以及拆装箱.md)
 #### [Java8流式处理集合，数组等](./Java相关\Java基础等/Java8流式处理集合，数组等.md)
 #### [Java中引用拷贝、对象浅拷贝、对象深拷贝](./Java相关\Java基础等/Java中引用拷贝、对象浅拷贝、对象深拷贝.md)
+#### [Java中的IO和NIO](./Java相关\Java基础等/Java中的IO和NIO.md)
 #### [Java序列化（Serialize）](./Java相关\Java基础等/Java序列化（Serialize）.md)
 #### [Java注解](./Java相关\Java基础等/Java注解.md)
 #### [Java的三种代理模式](./Java相关\Java基础等/Java的三种代理模式.md)
