@@ -6,6 +6,7 @@
 #### [Centos7安装python3.+](./工具服务搭建/Centos7安装python3.+.md)
 #### [Centos7安装RabbitMQ](./工具服务搭建/Centos7安装RabbitMQ.md)
 #### [Centos7安装Redis（含cluster方式集群部署）](./工具服务搭建/Centos7安装Redis（含cluster方式集群部署）.md)
+#### [Centos中Nginx平滑升级](./工具服务搭建/Centos中Nginx平滑升级.md)
 #### [Docker安装及命令介绍](./工具服务搭建/Docker安装及命令介绍.md)
 #### [Harbor安装及基本使用](./工具服务搭建/Harbor安装及基本使用.md)
 #### [Mariadb5.5.68升级10.5](./工具服务搭建/Mariadb5.5.68升级10.5.md)
