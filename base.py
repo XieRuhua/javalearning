@@ -6,6 +6,7 @@ import math
 
 # 需要忽略的配置文件/目录
 omitFiles = [
+    ".idea",  # idea文件夹
     ".git",  # git文件夹
     "base.py",  # 生成目录的python脚本
     "_dirs.md", "README.md", "README.md.bak",  # 目录文件及备份文件
@@ -37,6 +38,7 @@ def create_dir_list(file_dir):
     for root, dirs, files in os.walk(file_dir):
         # 需要写入的目录数组
         dirsArr = []
+
         # 首页固定的描述
         if root == "./":
             ## 获取备份文件中的数据（头文件）
@@ -52,23 +54,46 @@ def create_dir_list(file_dir):
 
         # 组装需要循环的内容
         for dirStr in dirs + files:
+            appendStr = ''
             if root == "./":
-                dirsArr.append("#### [" + dirStr + "](./" + dirStr + "/_dirs.md)")
+                appendStr = "[" + dirStr + "](./" + dirStr + "/_dirs.md)"
             elif ".md" in dirStr:
-                dirsArr.append("#### [" + dirStr.strip(".md") + "](" + root + "/" + dirStr + ")")
+                appendStr = "[" + dirStr.strip(".md") + "](" + root + "/" + dirStr + ")"
                 # 排除掉一个文件出现在多个文件夹时的重复计数
                 if dirStr not in allFiles:
                     count += 1
                     allFiles.append(dirStr)
             elif ".png" in dirStr:
                 # 脑图加载并居中
-                dirsArr.append("<center> \n\n#### " + dirStr.strip(".png") + " 脑图\n![" + dirStr.strip(
-                    ".png") + "](./" + dirStr + ")\n</center>")
+                appendStr = "<center> \n\n" + dirStr.strip(".png") + " 脑图\n![" + dirStr.strip(
+                    ".png") + "](./" + dirStr + ")\n</center>"
             elif ".xmind" in dirStr:
                 # 不加入xmind文件
                 continue
             else:
-                dirsArr.append("#### [" + dirStr + "](" + root + "/" + dirStr + "/_dirs.md)")
+                appendStr = "[" + dirStr + "](" + root + "/" + dirStr + "/_dirs.md)"
+
+            # 根目录加目录标识
+            if root == "./":
+                appendStr = "#### "+appendStr
+            dirsArr.append("\n" + appendStr)
+
+            # 循环生成子目录下的子目录和文件
+            for element, rootChild in enumerate(rootDirsArr):
+                # 子一级
+                if root in rootChild:
+                    rootDirsArr.insert(element + 1, "   - "+appendStr)
+                    break;
+                # 子二级
+                child2 = appendStr.split("/")[1].split("\\")
+                if len(child2) == 2 and child2[0] in rootChild and child2[1] in rootChild and '脑图' not in rootChild:
+                    rootDirsArr.insert(element + 1, "       - "+appendStr)
+                    break;
+                # 子三级
+                child3 = appendStr.split("/")[1].split("\\")
+                if len(child3) == 3 and child3[0] in rootChild and child3[1] in rootChild and child3[2] in rootChild and '脑图' not in rootChild:
+                    rootDirsArr.insert(element + 1, "           - "+appendStr)
+                    break;
 
         # 根路径
         if root == "./":
@@ -86,6 +111,8 @@ def create_dir_list(file_dir):
     # 头部描述和内容目录之间加上笔记总数/应该完成的笔记总数（工作天数/10）以及自2017-02-20以来的工作天数
     rootDirsArr[0] = rootDirsArr[0] + "\n> 目前笔记总篇数：" + str(count) + " / <font size='2px' color='#ccc'>" + str(
         totalPlannotes) + "-" + str(math.floor(day_num)) + "</font>"
+    # 根目录中间加上子目录和子目录的子文件
+
     # 根目录末尾加上文档工具来源
     rootDirsArr.append("#\n#\n>文档工具docsify：[官方文档-中文](https://docsify.js.org/#/zh-cn/)")
     file_create("./", "/README.md", rootDirsArr)
